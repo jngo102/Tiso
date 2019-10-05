@@ -97,9 +97,6 @@ namespace Tiso
                 GameObject.Find("Battle Scene").AddComponent<StartTiso>();
 
                 yield return new WaitForSeconds(5.0f);
-                
-                Log("Adding Spencer");
-                //GameObject.Find("Tiso Boss").AddComponent<Spencer>();
             }
         }
 

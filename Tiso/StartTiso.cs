@@ -8,6 +8,7 @@ using HutongGames.PlayMaker;
 using HutongGames.PlayMaker.Actions;
 using ModCommon;
 using UnityEngine;
+using static UnityEngine.Color;
 using Logger = Modding.Logger;
 using Object = UnityEngine.Object;
 
@@ -16,10 +17,10 @@ namespace Tiso
     public class StartTiso : MonoBehaviour
     {
         private PlayMakerFSM _activate;
-        private AssetBundle _bundle;
         private Sprite[] _tisoSprites;
 
         public static GameObject Tiso;
+        public static GameObject Tamer;
 
         private static GameObject preloadedGO;
 
@@ -42,45 +43,42 @@ namespace Tiso
 
         private IEnumerator ReplaceTiso()
         {
-            Log("Instantiating new Tiso");
-            Vector2 position = new Vector2(66.4f, 5f);
+            Vector2 position = new Vector2(66.7f, 5f);
             Quaternion rotation = Quaternion.identity;
-            Tiso = Instantiate(new GameObject(name="Tiso"), position, rotation);
-            Log("Destroying Old Tiso Boss");
-            Destroy(GameObject.Find("Tiso Boss"));
-            Log("Adding Spencer Component to new Tiso");
-            Tiso.AddComponent<Spencer>();
-            //GameObject.Find("Tiso Boss").AddComponent<Spencer>();
+            //Tiso = Instantiate(new GameObject("Tiso"), position, rotation);
+            //Log("Destroying Old Tiso Boss");
+            //Destroy(GameObject.Find("Tiso Boss"));
+            //Log("Adding Spencer Component to new Tiso");
+            //Tiso.AddComponent<Spencer>();
+            Log("Finding Tiso");
+            GameObject tiso = GameObject.Find("Tiso Boss");
+            Log("Adding Spencer to Tiso");
+            tiso.AddComponent<Spencer>();
+            Log("Instantiating new Tiso");
+            Tiso = Instantiate(tiso, position, rotation);
+            Log("Setting State of New Tiso to Roar End");
+            Tiso.LocateMyFSM("Control").SetState("Roar End");
+            yield return new WaitForSeconds(0.25f);
+            Log("Destroying Old Tiso");
+            Destroy(tiso);
+            int bossLevel = BossSceneController.Instance.BossLevel;
+            if (bossLevel > 0)
+            {
+                SummonGodTamer();
+            }
 
             yield return null;
         }
 
-        private void LoadAssets()
-        {
-            Log("Creating Path");
-            var tempPath = Path.Combine(Application.streamingAssetsPath, "tisosprites");
-            Log("Path: " + tempPath);
-            var path = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Hollow Knight\\hollow_knight_Data\\StreamingAssets\\tisosprites";
-            Log("path exists: " + File.Exists(path));
-            Log("tempPath exists: " + File.Exists(tempPath));
-            Log("Loading From Path");
-            _bundle = AssetBundle.LoadFromFile(path);
-            Log("Bundle null? " + (_bundle == null));
-            try
-            {
-                Log("Loading Asset with SubAssets");
-                _tisoSprites = _bundle.LoadAssetWithSubAssets<Sprite>("TisoSprites");
-                Log("Iterating through Tiso Sprites");
-                foreach (Sprite sprite in _tisoSprites)
-                {
-                    Log("Sprite Name: " + sprite.name);
-                }
-            }
-            catch (Exception e)
-            {
-                Log("Exception: " + e);
-                throw;
-            }
+        private void SummonGodTamer()
+        {;
+            Vector2 tamerPos = new Vector2(66.4f, 20f);
+            Quaternion rotation = Quaternion.identity;
+            Log("Instantiating God Tamer");
+            Tamer = Instantiate(TisoSpencer.PreloadedGameObjects["Tamer"], tamerPos, rotation);
+            Tamer.SetActive(true);
+            Log("Adding Tamer Component to God Tamer");
+            Tamer.AddComponent<Tamer>();
         }
         
         public static void Log(object message) => Logger.Log("[Start Tiso]" + message);

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using ModCommon;
 using Modding;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -17,34 +18,38 @@ namespace Tiso
         public static readonly List<byte[]> SpriteBytes = new List<byte[]>();
 
         public static GameObject Hornet;
-        
+
+        public static AssetBundle Bundle;
+
         public static TisoSpencer Instance { get; private set; }
 
-        public static readonly Dictionary<string, GameObject> PreloadedGameObjects = new Dictionary<string, GameObject>();
-        
         public override string GetVersion()
         {
             return "1.0.0";
         }
-
-        private string _previousScene;
+        
+        public static readonly Dictionary<string, GameObject> PreloadedGameObjects = new Dictionary<string, GameObject>();
 
         public override List<(string, string)> GetPreloadNames()
         {
             return new List<(string, string)>
             {
-                ("Crossroads_50", "Tiso Lake NPC"),
+                ("GG_God_Tamer", "Entry Object/Lancer"),
+                ("GG_Hornet_2", "Boss Holder/Hornet Boss 2"),
             };
         }
-
+        
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
             Log("Storing GameObjects");
-            PreloadedGameObjects.Add("Tiso Idle", preloadedObjects["Crossroads_50"]["Tiso Lake NPC"]);
+            PreloadedGameObjects.Add("Tamer", preloadedObjects["GG_God_Tamer"]["Entry Object/Lancer"]);
+            PreloadedGameObjects.Add("Hornet", preloadedObjects["GG_Hornet_2"]["Boss Holder/Hornet Boss 2"]);
 
             Instance = this;
 
             Log("Initializing");
+            
+            LoadAssets();
             
             Unload();
             
@@ -90,6 +95,12 @@ namespace Tiso
             Log("Initialized.");
         }
         
+        private void LoadAssets()
+        {
+            Log("Loading From Path");
+            Bundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "tisoassets"));
+        }
+        
         private object SetVariableHook(Type t, string key, object obj)
         {
             if (key == "statueStateTiso")
@@ -104,6 +115,7 @@ namespace Tiso
                 : orig;
         }
         
+        private string _previousScene;
         private void SceneChanged(Scene previousScene, Scene nextScene)
         {
             _previousScene = previousScene.name;
@@ -111,6 +123,10 @@ namespace Tiso
         
         private string OnLangGet(string key, string sheettitle)
         {
+            /*string text = Language.Language.GetInternal(key, sheettitle);
+            Log("Key: " + key);
+            Log("Text: " + text);
+            return text;*/
             switch (key)
             {
                 case "Tiso_Name":

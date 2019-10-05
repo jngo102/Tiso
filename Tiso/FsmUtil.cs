@@ -397,7 +397,8 @@ namespace Tiso
         [PublicAPI]
         public static FsmState CreateState(this PlayMakerFSM fsm, string stateName)
         {
-            var state = new FsmState(fsm.Fsm) {Name = stateName};
+            var state = new FsmState(fsm.Fsm);
+            state.Name = stateName;
 
             List<FsmState> fsmStates = fsm.FsmStates.ToList();
             fsmStates.Add(state);

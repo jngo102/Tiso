@@ -24,7 +24,7 @@ namespace Tiso
         public string animCurr;
         public bool looping;
         private bool queue;
-        public IEnumerator Play(string name, bool loop = false, float delay = 0.1f, GameObject follow = null)
+        public IEnumerator Play(string name, bool loop = false, float delay = 0.1f)
         {
             if (playing)
             {
@@ -36,15 +36,20 @@ namespace Tiso
             animCurr = name;
             playing = true;
             looping = loop;
-            if (follow != null)
-            {
-                StartCoroutine(FollowObject(follow));
-            }
             do
             {
                 foreach (var i in animations[name])
                 {
-                    gameObject.GetComponent<SpriteRenderer>().sprite = i;
+                    try
+                    {
+                        gameObject.GetComponent<SpriteRenderer>().sprite = i;
+                    }
+                    catch (Exception e)
+                    {
+                        Log("Exception: " + e);
+                        throw;
+                    }
+                    
                     yield return new WaitForSeconds(delay);
                 }
                 yield return null;
@@ -53,14 +58,7 @@ namespace Tiso
             animCurr = "";
             playing = false;
         }
-        IEnumerator FollowObject(GameObject go)
-        {
-            while (gameObject.activeSelf)
-            {
-                gameObject.transform.SetPosition2D(go.transform.position.x, go.transform.position.y-0.5f);
-                yield return null;
-            }
-        }
+
         private static void Log(object obj)
         {
             Logger.Log("[Custom Animator] " + obj);

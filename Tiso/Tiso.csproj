@@ -76,22 +76,11 @@
     <Compile Include="SaveSettings.cs" />
     <Compile Include="Spencer.cs" />
     <Compile Include="StartTiso.cs" />
+    <Compile Include="Tamer.cs" />
     <Compile Include="TisoSpencer.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assets\0_TisoStatue.png" />
-    <EmbeddedResource Include="Assets\1_Idle0.png" />
-    <EmbeddedResource Include="Assets\2_Idle1.png" />
-    <EmbeddedResource Include="Assets\3_Idle2.png" />
-    <EmbeddedResource Include="Assets\4_Idle3.png" />
-    <EmbeddedResource Include="Assets\5_Land0.png" />
-    <EmbeddedResource Include="Assets\6_Land1.png" />
-    <EmbeddedResource Include="Assets\7_Land2.png" />
-    <EmbeddedResource Include="Assets\8_Land3.png" />
-    <EmbeddedResource Include="Assets\9_Spin0.png" />
-    <EmbeddedResource Include="Assets\10_Spin1.png" />
-    <EmbeddedResource Include="Assets\11_Spin2.png" />
-    <EmbeddedResource Include="Assets\12_Roar0.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Diffuse Flash.shader" />
