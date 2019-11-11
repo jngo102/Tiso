@@ -49,6 +49,9 @@
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
     </Reference>
@@ -69,7 +72,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomAnimator.cs" />
+    <Compile Include="TisoAnimator.cs" />
     <Compile Include="FsmUtil.cs" />
     <Compile Include="MawlekFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -77,13 +80,13 @@
     <Compile Include="Spencer.cs" />
     <Compile Include="StartTiso.cs" />
     <Compile Include="Tamer.cs" />
+    <Compile Include="TisoAttacks.cs" />
+    <Compile Include="TisoAudio.cs" />
+    <Compile Include="TisoDeath.cs" />
     <Compile Include="TisoSpencer.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assets\0_TisoStatue.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Diffuse Flash.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

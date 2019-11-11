@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using HutongGames.PlayMaker.Actions;
 using ModCommon;
 using Modding;
 using JetBrains.Annotations;
@@ -16,10 +17,6 @@ namespace Tiso
     {
         public static readonly List<Sprite> Sprites = new List<Sprite>();
         public static readonly List<byte[]> SpriteBytes = new List<byte[]>();
-
-        public static GameObject Hornet;
-
-        public static AssetBundle Bundle;
 
         public static TisoSpencer Instance { get; private set; }
 
@@ -36,14 +33,16 @@ namespace Tiso
             {
                 ("GG_God_Tamer", "Entry Object/Lancer"),
                 ("GG_Hornet_2", "Boss Holder/Hornet Boss 2"),
+                ("GG_Hive_Knight", "Battle Scene/Hive Knight"),
             };
         }
-        
+
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
             Log("Storing GameObjects");
-            PreloadedGameObjects.Add("Tamer", preloadedObjects["GG_God_Tamer"]["Entry Object/Lancer"]);
+            PreloadedGameObjects.Add("Bee", preloadedObjects["GG_Hive_Knight"]["Battle Scene/Hive Knight"]);
             PreloadedGameObjects.Add("Hornet", preloadedObjects["GG_Hornet_2"]["Boss Holder/Hornet Boss 2"]);
+            PreloadedGameObjects.Add("Tamer", preloadedObjects["GG_God_Tamer"]["Entry Object/Lancer"]);
 
             Instance = this;
 
@@ -95,10 +94,20 @@ namespace Tiso
             Log("Initialized.");
         }
         
+        public static AssetBundle TisoAssetsBundle;
+        public static AssetBundle TisoBundle;
+        public static GameObject TisoBoss;
         private void LoadAssets()
         {
-            Log("Loading From Path");
-            Bundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "tisoassets"));
+            Log("Loading TisoAssets");
+            TisoAssetsBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "tisoassets"));
+            Log("Loading Tiso");
+            TisoBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "tiso"));
+
+            /*Log("Tiso Boss Exists? " + (TisoBoss == null) + " " + TisoBoss.name + " " + TisoBoss.GetType());
+            GameObject tisoBoss = UObject.Instantiate(TisoBoss, new Vector2(66.4f, 5.0f), Quaternion.identity);
+            Log("Tiso Boss: " + tisoBoss.name);
+            UObject.DontDestroyOnLoad(tisoBoss);*/
         }
         
         private object SetVariableHook(Type t, string key, object obj)
@@ -139,6 +148,14 @@ namespace Tiso
                     return "by Tiso Spencer";
                 case "Tiso_Desc":
                     return "Tiso Placeholder";
+                case "Tiso_1":
+                    return "I AM TISO!!!! 1";
+                case "Tiso_2":
+                    return "I AM TISO!!!! 2";
+                case "Tiso_3":
+                    return "I AM TISO!!!! 3";
+                case "Tiso_4":
+                    return "I AM TISO!!!! 4";
                 default:
                     return Language.Language.GetInternal(key, sheettitle);
             }

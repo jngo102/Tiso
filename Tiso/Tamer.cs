@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using HutongGames.PlayMaker.Actions;
 using ModCommon;
+using ModCommon.Util;
 using Logger = Modding.Logger;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -27,6 +28,8 @@ namespace Tiso
         {
             _control = gameObject.LocateMyFSM("Control");
             _healthManager = GetComponent<HealthManager>();
+
+            On.InfectedEnemyEffects.RecieveHitEffect += ReceiveHit;
         }
 
         private IEnumerator Start()
@@ -38,8 +41,8 @@ namespace Tiso
             _healthManager.hp = Health;
 
             Log("Changing Tamer Defeat y");
-            _control.GetAction<SetPosition>("Defeat").y = 4.0f;
-            _control.InsertMethod("Defeat", 0, LogPos);
+            _control.GetAction<SetPosition>("Defeat").y = 5.6f;
+            _control.GetAction<SetPosition>("Done").y = 5.6f;
 
             _control.GetAction<WaitRandom>("Idle").timeMin = 0.25f;
             _control.GetAction<WaitRandom>("Idle").timeMax = 0.25f;
@@ -50,20 +53,23 @@ namespace Tiso
             gameObject.PrintSceneHierarchyTree();
         }
 
-        private void LogPos()
+        // Taken and modified from https://github.com/5FiftySix6/HollowKnight.Lost-Lord/blob/master/LostLord/Kin.cs
+        private void ReceiveHit(On.InfectedEnemyEffects.orig_RecieveHitEffect orig, InfectedEnemyEffects self, float attackdirection)
         {
-            Log("Death Position Before: " + transform.position);
-            gameObject.transform.SetPosition2D(transform.position.x, 4.0f);
-            Vector2 pos = transform.position;
-            pos.y = 4.0f;
-            Log("Death Position After: " + transform.position);
-        }
-        
-        void Update()
-        {
+            if (self.GetAttr<bool>("didFireThisFrame"))
+            {
+                return;
+            }
 
+            if (self.GetAttr<SpriteFlash>("spriteFlash") != null)
+            {
+                self.GetAttr<SpriteFlash>("spriteFlash").flashFocusHeal();
+            }
+            
+            FSMUtility.SendEventToGameObject(gameObject, "DAMAGE FLASH", true);
+            self.GetAttr<AudioEvent>("impactAudio").SpawnAndPlayOneShot(self.GetAttr<AudioSource>("audioSourcePrefab"), self.transform.position);
+            self.SetAttr("didFireThisFrame", true);
         }
-
         public static void Log(object message) => Logger.Log("[Tamer]" + message);
     }
     
