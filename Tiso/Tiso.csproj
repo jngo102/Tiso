@@ -72,6 +72,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PhaseControl.cs" />
     <Compile Include="TisoAnimator.cs" />
     <Compile Include="FsmUtil.cs" />
     <Compile Include="MawlekFinder.cs" />

@@ -20,6 +20,7 @@ namespace Tiso
         private static TisoAnimator _anim;
         private static TisoAudio _audio;
         private static TisoAttacks _instance;
+        private PhaseControl _phaseCtrl;
         private static Random _rand;
         private static Rigidbody2D _rb;
         private static SpriteRenderer _sr;
@@ -33,8 +34,22 @@ namespace Tiso
             _rand = new Random();
             _rb = GetComponent<Rigidbody2D>();
             _sr = GetComponent<SpriteRenderer>();
+            _phaseCtrl = GetComponent<PhaseControl>();
+
+            _phaseCtrl.TriggeredPhase2 += OnTriggeredPhase2;
+            _phaseCtrl.TriggeredPhase3 += OnTriggeredPhase3;
         }
 
+        private void OnTriggeredPhase2()
+        {
+            Log("Handled Phase 2");
+        }
+        
+        private void OnTriggeredPhase3()
+        {
+            Log("Handle Phase 3");
+        }
+        
         private void Start()
         {
             
@@ -51,16 +66,9 @@ namespace Tiso
             {
                 _rb.velocity += Vector2.down * Gravity * Time.deltaTime;
             }
-            
-            if (transform.position.x <= LeftX)
-            {
-                transform.SetPositionX(LeftX);
-            }
-            else if (transform.position.x >= RightX)
-            {
-                transform.SetPositionX(RightX);
-            }
-    }
+
+            CheckWallCollisions();
+        }
         
         public void TisoJump()
         {
@@ -117,7 +125,7 @@ namespace Tiso
        private bool IsGrounded()
         {
             float rayLength = _sr.bounds.extents.y + Extension;
-            GameObject line = new GameObject();
+            /*GameObject line = new GameObject();
             LineRenderer lineRenderer = line.AddComponent<LineRenderer>();
             lineRenderer.startWidth = 0.1f;
             lineRenderer.endWidth = 0.1f;
@@ -125,38 +133,20 @@ namespace Tiso
             lineRenderer.endColor = Color.red;
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, transform.position + Vector3.down * rayLength);
-            Destroy(line, 0.01f);
+            Destroy(line, 0.01f);*/
             return Physics2D.Raycast(transform.position, Vector2.down, rayLength, CollisionMask);
         }
 
-       private bool IsCollidingWithWall()
+       private void CheckWallCollisions()
        {
-           float rayLength = _sr.bounds.extents.x + Extension;
-
-           Vector3 pos = transform.position;
-           
-           GameObject lineL = new GameObject();
-           LineRenderer lL = lineL.AddComponent<LineRenderer>();
-           lL.startWidth = 0.1f;
-           lL.endWidth = 0.1f;
-           lL.startColor = Color.red;
-           lL.endColor = Color.red;
-           lL.SetPosition(0, pos);
-           lL.SetPosition(1, pos + Vector3.left * rayLength);
-           Destroy(lineL, 0.01f);
-           
-           GameObject lineR = new GameObject();
-           LineRenderer lR = lineL.AddComponent<LineRenderer>();
-           lR.startWidth = 0.1f;
-           lR.endWidth = 0.1f;
-           lR.startColor = Color.red;
-           lR.endColor = Color.red;
-           lR.SetPosition(0, pos);
-           lR.SetPosition(1, pos + Vector3.right * rayLength);
-           Destroy(lineR, 0.01f);
-           
-           return Physics2D.Raycast(pos, Vector3.left, rayLength, CollisionMask) ||
-                  Physics2D.Raycast(pos, Vector3.right, rayLength, CollisionMask);
+           if (transform.position.x <= LeftX)
+           {
+               transform.SetPositionX(LeftX);
+           }
+           else if (transform.position.x >= RightX)
+           {
+               transform.SetPositionX(RightX);
+           }
        }
 
         private static void Log(object message) => Modding.Logger.Log("[Tiso Attacks]: " + message);
