@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Tiso
 {
@@ -64,14 +63,12 @@ namespace Tiso
             if (hm.hp < _phase2Health + _phase3Health && !_enteredPhase2)
             {
                 _enteredPhase2 = true;
-                Log("Sending Phase 2 Event");
                 OnTriggeredPhase2();
             }
             
             if (hm.hp < _phase3Health && !_enteredPhase3)
             {
                 _enteredPhase3 = true;
-                Log("Sending Phase 3 Event");
                 OnTriggeredPhase3();
             }
         }

@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.Collections;
 using HutongGames.PlayMaker.Actions;
 using ModCommon;
 using ModCommon.Util;
 using Logger = Modding.Logger;
 using UnityEngine;
-using Object = UnityEngine.Object;
-using Random = System.Random;
 
 using UnityEngine.SceneManagement;
 using USceneManager = UnityEngine.SceneManagement.SceneManager;
@@ -21,13 +14,13 @@ namespace Tiso
     {
         private const int Health = 1700;
         
-        private HealthManager _healthManager;
+        private HealthManager _hm;
         private PlayMakerFSM _control;
         
         private void Awake()
         {
             _control = gameObject.LocateMyFSM("Control");
-            _healthManager = GetComponent<HealthManager>();
+            _hm = GetComponent<HealthManager>();
 
             On.InfectedEnemyEffects.RecieveHitEffect += ReceiveHit;
         }
@@ -38,7 +31,7 @@ namespace Tiso
 
             while (HeroController.instance == null) yield return null;
 
-            _healthManager.hp = Health;
+            _hm.hp = Health;
 
             Log("Changing Tamer Defeat y");
             _control.GetAction<SetPosition>("Defeat").y = 5.6f;
@@ -70,6 +63,12 @@ namespace Tiso
             self.GetAttr<AudioEvent>("impactAudio").SpawnAndPlayOneShot(self.GetAttr<AudioSource>("audioSourcePrefab"), self.transform.position);
             self.SetAttr("didFireThisFrame", true);
         }
+
+        private void OnDestroy()
+        {
+            On.InfectedEnemyEffects.RecieveHitEffect -= ReceiveHit;
+        }
+
         public static void Log(object message) => Logger.Log("[Tamer]" + message);
     }
     

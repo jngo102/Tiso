@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using HutongGames.PlayMaker;
-using HutongGames.PlayMaker.Actions;
-using ModCommon;
+﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using static UnityEngine.Color;
 using Logger = Modding.Logger;
-using Object = UnityEngine.Object;
 using USceneManager = UnityEngine.SceneManagement.SceneManager;
 
 namespace Tiso

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using HutongGames.PlayMaker.Actions;
 using ModCommon;
 using ModCommon.Util;
 using Modding;
@@ -15,10 +14,6 @@ namespace Tiso
 {
     internal class Spencer : MonoBehaviour
     {
-        private const int AttunedHealth = 1250;
-        private const int AscendedHealth = 1700;
-        private const float AnimFPS = 1.0f / 12;
-        
         private BoxCollider2D _collider;
         private PlayMakerFSM _control;
         private HealthManager _hm;
@@ -27,7 +22,6 @@ namespace Tiso
         private EnemyHitEffectsUninfected _hitEff;
         private EnemyDeathEffectsUninfected _deathEff;
         private Recoil _recoil;
-        private Random _rand;
 
         private void Awake()
         {
@@ -37,6 +31,7 @@ namespace Tiso
             go.layer = 11;
             
             AddComponents();
+            DestroyComponents();
             
             ModHooks.Instance.LanguageGetHook += OnLangGet;
         }
@@ -73,12 +68,11 @@ namespace Tiso
             _anim.PlayAnimation("Idle", true);
 
             yield return new WaitForSeconds(1.0f);
-            
-            Log("Starting TisoJump");
-            _attacks.TisoJump();
-            
+
             gameObject.GetOrAddComponent<DebugColliders>();
             
+            _attacks.TisoJump();
+
             gameObject.PrintSceneHierarchyTree();
         }
         
@@ -104,7 +98,7 @@ namespace Tiso
             _recoil.SetAttr<bool>("stopVelocityXWhenRecoilingUp", true);
             _recoil.SetAttr<bool>("preventRecoilUp", false);
             _recoil.SetAttr<float>("recoilSpeedBase", 15f);
-            _recoil.SetAttr<float>("recoilDuration", 0.1f);
+            _recoil.SetAttr<float>("recoilDuration", 0.15f);
 
             _hitEff = gameObject.GetOrAddComponent<EnemyHitEffectsUninfected>();
             _hitEff.enabled = true;
@@ -117,7 +111,10 @@ namespace Tiso
             dreamNailReaction.SetConvoTitle("Tiso_2");
 
             gameObject.GetOrAddComponent<ExtraDamageable>().enabled = true;
+        }
 
+        private void DestroyComponents()
+        {
             Destroy(GetComponent<tk2dSpriteAnimator>());
             Destroy(GetComponent<tk2dSprite>());
             Destroy(GetComponent<MeshFilter>());
@@ -125,7 +122,7 @@ namespace Tiso
             Destroy(gameObject.FindGameObjectInChildren("Shield"));
             Destroy(gameObject.FindGameObjectInChildren("Corpse"));
         }
-
+        
         private TisoAnimator _anim;
         private TisoAudio _audio;
         private TisoAttacks _attacks;
@@ -158,13 +155,6 @@ namespace Tiso
             {
                 fi.SetValue(_deathEff, fi.GetValue(hornetDeathEffects));
             }
-            
-            /*Recoil hornetRecoil = TisoSpencer.PreloadedGameObjects["Hornet"].GetComponent<Recoil>();
-            foreach (FieldInfo fi in typeof(Recoil).GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
-                .Where(x => x.Name.Contains("Prefab")))
-            {
-                fi.SetValue(_recoil, fi.GetValue(hornetRecoil));
-            }*/
         }
 
         private List<string> validColliders = new List<string>
@@ -182,7 +172,7 @@ namespace Tiso
             }
             else if (collider.name == "Hitbox")
             {
-                _anim.FlashWhite(1.5f);
+                _anim.FlashWhite(1.0f);
             }
         }
 

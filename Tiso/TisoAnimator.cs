@@ -11,12 +11,14 @@ namespace Tiso
         public Dictionary<string, List<Sprite>> animations = new Dictionary<string, List<Sprite>>();
         
         public static Sprite[] TisoSprites;
+        public static Sprite[] TisoSpritesCustom;
         public static Sprite[] TisoSpritesGodhome;
         private Shader _shader;
         private SpriteRenderer _sr;
         private void Awake()
         {
             TisoSprites = TisoSpencer.TisoAssetsBundle.LoadAssetWithSubAssets<Sprite>("TisoSprites");
+            TisoSpritesCustom = TisoSpencer.TisoAssetsBundle.LoadAssetWithSubAssets<Sprite>("TisoSpritesCustom");
             TisoSpritesGodhome = TisoSpencer.TisoAssetsBundle.LoadAssetWithSubAssets<Sprite>("TisoSpritesGodhome");
             _shader = TisoSpencer.TisoAssetsBundle.LoadAsset<Shader>("Sprites-Diffuse_Flash");
             AddAnimations();
@@ -31,6 +33,17 @@ namespace Tiso
         
         private void AddAnimations()
         {
+            List<Sprite> dashAnticSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "DashAntic0"),
+            };
+
+            List<Sprite> dashingSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "Dashing0"),
+                FindSprite(TisoSpritesCustom, "Dashing1"),
+            };
+            
             List<Sprite> idleSprites = new List<Sprite>
             {
                 FindSprite(TisoSprites, "Idle0"),
@@ -62,10 +75,12 @@ namespace Tiso
                 FindSprite(TisoSpritesGodhome, "Spin2"),
             };
             
+            animations.Add("Dash Antic", dashAnticSprites);
+            animations.Add("Dashing", dashingSprites);
             animations.Add("Idle", idleSprites);
             animations.Add("Jump Antic", jumpAnticSprites);
             animations.Add("Land", landSprites);
-            animations.Add("Spin", spinSprites);
+            animations.Add("Spinning", spinSprites);
         }
 
         public static Sprite FindSprite(Sprite[] spriteList, string spriteName)
@@ -78,6 +93,12 @@ namespace Tiso
                 }
             }
             return null;
+        }
+
+        public float GetAnimDuration(string animName, float delay = AnimFPS)
+        {
+            int numFrames = animations[animName].Count;
+            return numFrames * delay;
         }
         
         private const float AnimFPS = 1.0f / 12;
@@ -105,7 +126,6 @@ namespace Tiso
         private Coroutine _flashRoutine;
         public void FlashWhite(float time)
         {
-            Log("Flashing White");
             IEnumerator Flash()
             {
                 float flashAmount = 1.0f;
