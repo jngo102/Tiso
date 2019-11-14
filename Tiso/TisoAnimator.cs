@@ -36,12 +36,25 @@ namespace Tiso
             List<Sprite> dashAnticSprites = new List<Sprite>
             {
                 FindSprite(TisoSpritesCustom, "DashAntic0"),
+                FindSprite(TisoSpritesCustom, "DashAntic0"),
+                FindSprite(TisoSpritesCustom, "DashAntic0"),
+                FindSprite(TisoSpritesCustom, "DashAntic0"),
+                FindSprite(TisoSpritesCustom, "DashAntic0"),
             };
 
             List<Sprite> dashingSprites = new List<Sprite>
             {
                 FindSprite(TisoSpritesCustom, "Dashing0"),
                 FindSprite(TisoSpritesCustom, "Dashing1"),
+            };
+            
+            List<Sprite> dashRecoverSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "DashRecover0"),
+                FindSprite(TisoSpritesGodhome, "Spinning0"),
+                FindSprite(TisoSpritesGodhome, "Spinning1"),
+                FindSprite(TisoSpritesGodhome, "Spinning2"),
+                FindSprite(TisoSpritesCustom, "DashRecover4"),
             };
             
             List<Sprite> idleSprites = new List<Sprite>
@@ -68,19 +81,20 @@ namespace Tiso
                 FindSprite(TisoSpritesGodhome, "Land2"),
             };
             
-            List<Sprite> spinSprites = new List<Sprite>()
+            List<Sprite> spinningSprites = new List<Sprite>()
             {
-                FindSprite(TisoSpritesGodhome, "Spin0"),
-                FindSprite(TisoSpritesGodhome, "Spin1"),
-                FindSprite(TisoSpritesGodhome, "Spin2"),
+                FindSprite(TisoSpritesGodhome, "Spinning0"),
+                FindSprite(TisoSpritesGodhome, "Spinning1"),
+                FindSprite(TisoSpritesGodhome, "Spinning2"),
             };
             
             animations.Add("Dash Antic", dashAnticSprites);
             animations.Add("Dashing", dashingSprites);
+            animations.Add("Dash Recover", dashRecoverSprites);
             animations.Add("Idle", idleSprites);
             animations.Add("Jump Antic", jumpAnticSprites);
             animations.Add("Land", landSprites);
-            animations.Add("Spinning", spinSprites);
+            animations.Add("Spinning", spinningSprites);
         }
 
         public static Sprite FindSprite(Sprite[] spriteList, string spriteName)

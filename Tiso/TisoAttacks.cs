@@ -9,7 +9,6 @@ namespace Tiso
 {
     public class TisoAttacks : MonoBehaviour
     {
-        private const float AnimFPS = 1.0f / 12;
         private const int CollisionMask = 1 << 8;
         private const float Extension = 1.0f;
         private const float Gravity = 60f;
@@ -17,6 +16,7 @@ namespace Tiso
         private const float JumpVelocity = 30f;
         private const float LeftX = 52.9f;
         private const float RightX = 70.9f;
+        private const float DashVelocity = 30.0f;
      
         private static Dictionary<string, Action> _moves = new Dictionary<string, Action>();
         
@@ -46,31 +46,33 @@ namespace Tiso
         private void OnTriggeredPhase2()
         {
             Log("Handle Phase 2");
-            _moves.Add("Throw", TisoThrow);
+            _moves["Throw"] = TisoThrow;
         }
         
         private void OnTriggeredPhase3()
         {
             Log("Handle Phase 3");
-            _moves.Add("Laser", TisoLaser);
+            _moves["Laser"] = TisoLaser;
         }
         
         private IEnumerator Start()
         {
-            Log("Tiso Attacks Start");
-            
+
             yield return null;
-
-            while (HeroController.instance == null) yield return null;
             
-            _moves.Add("Dash", TisoDash);
-            _moves.Add("Jump", TisoJump);
-            _moves.Add("Slash", TisoSlash);
+            _moves["Dash"] = TisoDash;
+            _moves["Jump"] = TisoJump;
+            _moves["Slash"] = TisoSlash;
 
+            Log("Waiting...");
             yield return new WaitForSeconds(2.0f);
             
-            Log("Starting TisoJump");
-            TisoJump();
+            _moves["Dash"].Invoke();
+        }
+
+        private void ChooseAttack()
+        {
+            
         }
         
         private void Update()
@@ -101,7 +103,7 @@ namespace Tiso
         {
         }
 
-        private void TisoDash()
+        public void TisoDash()
         {
             IEnumerator DashAntic()
             {
@@ -109,32 +111,52 @@ namespace Tiso
                 
                 yield return new WaitForSeconds(_anim.GetAnimDuration("Dash Antic"));
 
-                StartCoroutine(Dashing());
+                StartCoroutine(Dashing(0.25f));
             }
 
-            IEnumerator Dashing()
+            IEnumerator Dashing(float dashTime)
             {
                 _anim.PlayAnimation("Dashing", true);
-                _rb.velocity = new Vector2();
+                _audio.PlayAudioClip("Dash");
+                _rb.velocity = new Vector2(-DashVelocity, 0);
                 
-                yield return new WaitForSeconds(1.0f);
+                yield return new WaitForSeconds(dashTime);
 
-                StartCoroutine(DashRecover());
+                StartCoroutine(DashRecover(0.5f));
             }
 
-            IEnumerator DashRecover()
+            IEnumerator DashRecover(float recoverTime)
             {
                 _anim.PlayAnimation("Dash Recover");
-                float xVel = _rb.velocity.x;
-                while (_rb.velocity.x != 0)
+                if (_rb.velocity.x > 0)
                 {
-                    xVel -= 0.1f;
-                    yield return new WaitForSeconds(0.1f);
+                    do
+                    {
+                        _rb.velocity += Vector2.left * 0.1f * DashVelocity * (1.0f / recoverTime);
+                        Log("Velocity: " + _rb.velocity);
+                        yield return new WaitForSeconds(0.1f);
+                    } 
+                    while (_rb.velocity.x < 0);
+                }
+                else if (_rb.velocity.x < 0)
+                {
+                    do
+                    {
+                        _rb.velocity += Vector2.right * 0.1f * DashVelocity * (1.0f / recoverTime);
+                        Log("Velocity: " + _rb.velocity);
+                        yield return new WaitForSeconds(0.1f);
+                    } 
+                    while (_rb.velocity.x < 0);
                 }
 
+                _rb.velocity = Vector2.zero;
+                
+
+                _anim.PlayAnimation("Idle", true);
+                
                 yield return null;
             }
-            
+
             StartCoroutine(DashAntic());
         }
         

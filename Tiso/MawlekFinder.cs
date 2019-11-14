@@ -92,7 +92,6 @@ namespace Tiso
 
             if (PlayerData.instance.statueStateBroodingMawlek.usingAltVersion)
             {
-                Log("Adding StartTiso");
                 GameObject.Find("Battle Scene").AddComponent<StartTiso>();;
             }
         }

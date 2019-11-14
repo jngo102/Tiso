@@ -70,8 +70,6 @@ namespace Tiso
             yield return new WaitForSeconds(1.0f);
 
             gameObject.GetOrAddComponent<DebugColliders>();
-            
-            _attacks.TisoJump();
 
             gameObject.PrintSceneHierarchyTree();
         }
