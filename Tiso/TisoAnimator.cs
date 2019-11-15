@@ -56,6 +56,22 @@ namespace Tiso
                 FindSprite(TisoSpritesGodhome, "Spinning2"),
                 FindSprite(TisoSpritesCustom, "DashRecover4"),
             };
+
+            List<Sprite> evadeAnticSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "EvadeAntic0"),
+            };
+
+            List<Sprite> evadingSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "Evading0"),
+                FindSprite(TisoSpritesCustom, "Evading1"),
+            };
+            
+            List<Sprite> evadeRecoverSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "EvadeAntic0"),
+            };
             
             List<Sprite> idleSprites = new List<Sprite>
             {
@@ -81,20 +97,55 @@ namespace Tiso
                 FindSprite(TisoSpritesGodhome, "Land2"),
             };
             
-            List<Sprite> spinningSprites = new List<Sprite>()
+            List<Sprite> spinningSprites = new List<Sprite>
             {
                 FindSprite(TisoSpritesGodhome, "Spinning0"),
                 FindSprite(TisoSpritesGodhome, "Spinning1"),
                 FindSprite(TisoSpritesGodhome, "Spinning2"),
             };
+
+            List<Sprite> throwAnticSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "ThrowAntic0"),
+                FindSprite(TisoSpritesCustom, "ThrowAntic1"),
+                FindSprite(TisoSpritesCustom, "ThrowAntic2"),
+            };
+            
+            List<Sprite> throwRecoverSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "ThrowRecover0"),
+            };
+            
+            List<Sprite> throwSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "Throw0"),
+            };
+            
+            List<Sprite> throwWaitSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "ThrowWait0"),
+                FindSprite(TisoSpritesCustom, "ThrowWait1"),
+                FindSprite(TisoSpritesCustom, "ThrowWait2"),
+            };
             
             animations.Add("Dash Antic", dashAnticSprites);
             animations.Add("Dashing", dashingSprites);
             animations.Add("Dash Recover", dashRecoverSprites);
+            
+            animations.Add("Evade Antic", evadeAnticSprites);
+            animations.Add("Evading", evadingSprites);
+            animations.Add("Evade Recover", evadeRecoverSprites);
+            
             animations.Add("Idle", idleSprites);
+            
             animations.Add("Jump Antic", jumpAnticSprites);
             animations.Add("Land", landSprites);
             animations.Add("Spinning", spinningSprites);
+            
+            animations.Add("Throw Antic", throwAnticSprites);
+            animations.Add("Throw", throwSprites);
+            animations.Add("Throw Wait", throwWaitSprites);
+            animations.Add("Throw Recover", throwRecoverSprites);
         }
 
         public static Sprite FindSprite(Sprite[] spriteList, string spriteName)
