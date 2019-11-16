@@ -93,7 +93,7 @@ namespace Tiso
             _recoil = gameObject.GetOrAddComponent<Recoil>();
             _recoil.enabled = true;
             _recoil.SetAttr<bool>("freezeInPlace", false);
-            _recoil.SetAttr<bool>("stopVelocityXWhenRecoilingUp", true);
+            _recoil.SetAttr<bool>("stopVelocityXWhenRecoilingUp", false);
             _recoil.SetAttr<bool>("preventRecoilUp", false);
             _recoil.SetAttr<float>("recoilSpeedBase", 15f);
             _recoil.SetAttr<float>("recoilDuration", 0.15f);

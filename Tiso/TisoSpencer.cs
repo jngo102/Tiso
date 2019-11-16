@@ -34,6 +34,7 @@ namespace Tiso
                 ("GG_God_Tamer", "Entry Object/Lancer"),
                 ("GG_Hornet_2", "Boss Holder/Hornet Boss 2"),
                 ("GG_Hive_Knight", "Battle Scene/Hive Knight"),
+                ("GG_Hive_Knight", "Battle Scene/Globs/Hive Knight Glob"),
             };
         }
 
@@ -41,6 +42,7 @@ namespace Tiso
         {
             Log("Storing GameObjects");
             PreloadedGameObjects.Add("Bee", preloadedObjects["GG_Hive_Knight"]["Battle Scene/Hive Knight"]);
+            PreloadedGameObjects.Add("Glob", preloadedObjects["GG_Hive_Knight"]["Battle Scene/Globs/Hive Knight Glob"]);
             PreloadedGameObjects.Add("Hornet", preloadedObjects["GG_Hornet_2"]["Boss Holder/Hornet Boss 2"]);
             PreloadedGameObjects.Add("Tamer", preloadedObjects["GG_God_Tamer"]["Entry Object/Lancer"]);
 

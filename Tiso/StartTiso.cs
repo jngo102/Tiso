@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using ModCommon;
 using UnityEngine;
 using Logger = Modding.Logger;
 using USceneManager = UnityEngine.SceneManagement.SceneManager;
@@ -28,10 +29,10 @@ namespace Tiso
             _activate.ChangeTransition("In Pantheon?", "STATUE", "Tiso?");
             _activate.CreateState("Activate Tiso");
             _activate.ChangeTransition("Tiso", "TISO END", "Activate Tiso");
-            _activate.InsertCoroutine("Activate Tiso", 0, ReplaceTiso);
+            _activate.InsertCoroutine("Activate Tiso", 0, TisoStart);
         }
 
-        private IEnumerator ReplaceTiso()
+        private IEnumerator TisoStart()
         {
             /*string tisoScenePath = TisoSpencer.TisoBundle.GetAllScenePaths()[0];
             Log("Loading Tiso Scene");
@@ -45,28 +46,17 @@ namespace Tiso
             {
                 Log("GO Name: " + go.name);
             }*/
-
-            /*Tiso = Instantiate(new GameObject("Tiso"), position, rotation);
-            Log("Destroying Old Tiso Boss");
-            Destroy(GameObject.Find("Tiso Boss"));
-            Log("Adding Spencer Component to new Tiso");
-            Tiso.AddComponent<Spencer>();*/
+            
             Log("Finding Tiso");
             GameObject tiso = GameObject.Find("Tiso Boss");
             Log("Adding Spencer to Tiso");
             tiso.AddComponent<Spencer>();
-            Log("Instantiating new Tiso");
-            Vector2 position = tiso.transform.position;
-            Quaternion rotation = Quaternion.identity;
-            Tiso = Instantiate(tiso, position, rotation);
-            Log("Setting State of New Tiso to Roar End");
-            Tiso.LocateMyFSM("Control").SetState("Roar End");
-            yield return new WaitForSeconds(1.0f);
-            Log("Destroying Old Tiso");
-            Destroy(tiso);
+            
             int bossLevel = BossSceneController.Instance.BossLevel;
             if (bossLevel > 0) SummonGodTamer();
 
+            TisoSpencer.PreloadedGameObjects["Bee"].PrintSceneHierarchyTree();
+            
             yield return null;
         }
 

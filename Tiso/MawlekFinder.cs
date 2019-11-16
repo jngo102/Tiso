@@ -22,6 +22,8 @@ namespace Tiso
             /* Passing the strings instead of the Scenes because that's all we use and
              Unity kills the prev scene's name after <1 frame */
             StartCoroutine(SceneChangedRoutine(previousScene.name, nextScene.name));
+            
+            //nextScene.PrintHierarchy();
         }
 
         private IEnumerator SceneChangedRoutine(string prev, string next)

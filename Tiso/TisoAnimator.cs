@@ -68,7 +68,7 @@ namespace Tiso
                 FindSprite(TisoSpritesCustom, "Evading1"),
             };
             
-            List<Sprite> evadeRecoverSprites = new List<Sprite>
+            List<Sprite> evadeLandSprites = new List<Sprite>
             {
                 FindSprite(TisoSpritesCustom, "EvadeAntic0"),
             };
@@ -134,7 +134,7 @@ namespace Tiso
             
             animations.Add("Evade Antic", evadeAnticSprites);
             animations.Add("Evading", evadingSprites);
-            animations.Add("Evade Recover", evadeRecoverSprites);
+            animations.Add("Evade Land", evadeLandSprites);
             
             animations.Add("Idle", idleSprites);
             

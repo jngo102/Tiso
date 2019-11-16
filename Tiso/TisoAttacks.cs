@@ -19,7 +19,7 @@ namespace Tiso
         private const float LeftX = 52.9f;
         private const float RightX = 70.9f;
         
-        private static List<string> _moves = new List<string>();
+        private static List<Action> _moves = new List<Action>();
         
         private static TisoAnimator _anim;
         private static TisoAudio _audio;
@@ -49,47 +49,42 @@ namespace Tiso
         private void OnTriggeredPhase2()
         {
             Log("Handle Phase 2");
-            _moves.Add("TisoThrow");
+            _moves.Add(TisoThrow);
         }
         
         private void OnTriggeredPhase3()
         {
             Log("Handle Phase 3");
-            _moves.Add("TisoLaser");
+            _moves.Add(TisoLaser);
         }
         
         private IEnumerator Start()
         {
-
             yield return null;
-            
-            _moves.Add("TisoDash");
-            _moves.Add("TisoJump");
-            _moves.Add("TisoSlash");
+
+            while (HeroController.instance == null) yield return null;
+
+            Log("Tiso Start");
+
+            _moves.Clear();
+            _moves.Add(TisoDash);
+            _moves.Add(TisoJump);
+            _moves.Add(TisoSlash);
             
             yield return new WaitForSeconds(1.0f);
 
             StartCoroutine(IdleAndChooseNextAttack());
         }
-
-        private int localScale;
+        
         private void Update()
         {
-            if (_sr.flipX)
+            /*foreach (var move in _moves)
             {
-                localScale = -1;
+                Log("Move: " + move.Method.Name);   
             }
-            else
-            {
-                localScale = 1;
-            }
+            Log("");*/
         }
 
-        public void ExecuteAttack(string attackName)
-        {
-            Invoke(attackName, 0.0f);
-        }
-        
         private void FixedUpdate()
         {
             if (!IsGrounded())
@@ -111,25 +106,26 @@ namespace Tiso
         private IEnumerator IdleAndChooseNextAttack()
         {
             _anim.PlayAnimation("Idle", true);
-
+            _recoil.SetRecoilSpeed(15f);
+            
             float minWait = 0.5f;
             float maxWait = 1.0f;
             float waitTime = (float) (_rand.NextDouble() * maxWait) + minWait;
-            
+
             yield return new WaitForSeconds(waitTime);
-            
+
             int index = _rand.Next(_moves.Count);
-            string nextMove = _moves[index];
+            Action nextMove = _moves[index];
 
             if (Math.Abs(transform.position.x - HeroController.instance.transform.position.x) < 2.0f)
             {
-                nextMove = "TisoEvade";
+                nextMove = TisoEvade;
             }
             
-            Log("Next Move: " + nextMove + " All Moves: " + _moves);
+            Log("Next Move: " + nextMove.Method.Name);
             try
             {
-                ExecuteAttack(nextMove);
+                nextMove.Invoke();
             }
             catch (Exception e)
             {
@@ -153,22 +149,22 @@ namespace Tiso
             {
                 _anim.PlayAnimation("Dashing", true);
                 _audio.PlayAudioClip("Dash");
-                _rb.velocity = new Vector2(-DashVelocity * localScale, 0);
+                _rb.velocity = new Vector2(DashVelocity * direction, 0);
+                _recoil.freezeInPlace = true;
                 
                 yield return new WaitForSeconds(dashTime);
 
-                StartCoroutine(DashRecover(0.5f));
+                StartCoroutine(DashRecover());
             }
 
-            IEnumerator DashRecover(float recoverTime)
+            IEnumerator DashRecover()
             {
                 _anim.PlayAnimation("Dash Recover");
                 if (_rb.velocity.x > 0)
                 {
                     do
                     {
-                        _rb.velocity += Vector2.left * 0.1f * DashVelocity * (1.0f / recoverTime);
-                        Log("Velocity: " + _rb.velocity);
+                        _rb.velocity += Vector2.left * 0.1f * DashVelocity * (1.0f / _anim.GetAnimDuration("Dash Recover"));
                         yield return new WaitForSeconds(0.1f);
                     } 
                     while (_rb.velocity.x < 0);
@@ -177,19 +173,13 @@ namespace Tiso
                 {
                     do
                     {
-                        _rb.velocity += Vector2.right * 0.1f * DashVelocity * (1.0f / recoverTime);
-                        Log("Velocity: " + _rb.velocity);
+                        _rb.velocity += Vector2.right * 0.1f * DashVelocity * (1.0f / _anim.GetAnimDuration("Dash Recover"));
                         yield return new WaitForSeconds(0.1f);
                     } 
                     while (_rb.velocity.x < 0);
                 }
 
                 _rb.velocity = Vector2.zero;
-                
-
-                _anim.PlayAnimation("Idle", true);
-                
-                yield return null;
 
                 StartCoroutine(IdleAndChooseNextAttack());
             }
@@ -215,7 +205,8 @@ namespace Tiso
                 Log("Jump");
                 _audio.PlayAudioClip("Jump");
                 _anim.PlayAnimation("Spinning", true);
-                _rb.velocity = new Vector2(_rand.Next(-20, 20), JumpVelocity);
+                _rb.velocity = new Vector2(_rand.Next(10, 20) * direction, JumpVelocity);
+                _recoil.SetRecoilSpeed(0.0f);
                 
                 yield return null;
                 
@@ -261,7 +252,9 @@ namespace Tiso
             StartCoroutine(IdleAndChooseNextAttack());
         }
 
-        private GameObject _shield;
+        private GameObject _shieldGO;
+        private Shield _shieldComponent;
+        private Coroutine _throwWaitRoutine;
         private void TisoThrow()
         {
             IEnumerator ThrowAntic()
@@ -275,28 +268,37 @@ namespace Tiso
             IEnumerator Throw()
             {
                 _anim.PlayAnimation("Throw");
-                _shield = Instantiate(new GameObject("Shield"), transform.position, Quaternion.identity);
-                _shield.AddComponent<Shield>().direction = localScale;
+                _shieldGO = Instantiate(new GameObject("Shield"), transform.position, Quaternion.identity);
+                _shieldComponent = _shieldGO.AddComponent<Shield>();
+                _shieldComponent.direction = direction;
                 yield return new WaitForSeconds(_anim.GetAnimDuration("Throw"));
                 
-                StartCoroutine(ThrowWait());
+                _throwWaitRoutine = StartCoroutine(ThrowWait());
             }
 
             IEnumerator ThrowWait()
             {
                 _anim.PlayAnimation("Throw Wait", true);
-                _recoil.freezeInPlace = true;
-                yield return new WaitForSeconds(5.0f);
+                _recoil.SetRecoilSpeed(0.0f);
 
+                yield return null;
+                
+                _shieldComponent.ReturnedToTiso += OnReturnedToTiso;
+            }
+
+            void OnReturnedToTiso()
+            {
+                Log("Returned to Tiso");
                 StartCoroutine(ThrowRecover());
             }
             
             IEnumerator ThrowRecover()
             {
-                Destroy(_shield);
+                Destroy(_shieldGO);
                 _anim.PlayAnimation("Throw Recover");
                yield return new WaitForSeconds(_anim.GetAnimDuration("Throw Recover"));
-               _recoil.freezeInPlace = false;
+               
+               _shieldComponent.ReturnedToTiso -= OnReturnedToTiso;
 
                StartCoroutine(IdleAndChooseNextAttack());
             }
@@ -323,18 +325,19 @@ namespace Tiso
             IEnumerator Evade(float evadeTime)
             {
                 _anim.PlayAnimation("Evading");
-                _rb.velocity = Vector2.right * EvadeVelocity * localScale;
+                _rb.velocity = Vector2.left * EvadeVelocity * direction;
              
                 yield return new WaitForSeconds(evadeTime);
 
-                StartCoroutine(EvadeRecover());
+                StartCoroutine(EvadeLand());
             }
 
-            IEnumerator EvadeRecover()
+            IEnumerator EvadeLand()
             {
-                _anim.PlayAnimation("Evade Recover");
+                _anim.PlayAnimation("Evade Land");
+                _audio.PlayAudioClip("Evade Land");
                 _rb.velocity = Vector2.zero;
-                yield return new WaitForSeconds(_anim.GetAnimDuration("Evade Recover"));
+                yield return new WaitForSeconds(_anim.GetAnimDuration("Evade Land"));
 
                 StartCoroutine(IdleAndChooseNextAttack());
             }
@@ -378,19 +381,22 @@ namespace Tiso
                transform.SetPositionY(GroundY);
            }
        }
-       
+
+       private int direction = 1;
        private void FaceKnight()
        {
            float heroX = HeroController.instance.transform.GetPositionX();
            Transform trans = transform;
            float tisoX = trans.position.x;
-           if (heroX - tisoX < 0)
+           if (heroX - tisoX > 0)
            {
-               _sr.flipX = false;
+               _sr.flipX = true;
+               direction = 1;
            }
            else
            {
-               _sr.flipX = true;
+               _sr.flipX = false;
+               direction = -1;
            }
        }
 

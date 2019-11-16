@@ -23,6 +23,8 @@ namespace Tiso
             {
                 case "Dash":
                     return (AudioClip)_hornetControl.GetAction<AudioPlaySimple>("G Dash").oneShotClip.Value;
+                case "Evade Land":
+                    return (AudioClip) _hornetControl.GetAction<AudioPlaySimple>("Evade Land").oneShotClip.Value;
                 case "Jump":
                 case "Land":
                     return (AudioClip)_beeControl.GetAction<AudioPlaySimple>(clipName).oneShotClip.Value;

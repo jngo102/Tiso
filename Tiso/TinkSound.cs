@@ -1,4 +1,5 @@
 ﻿using HutongGames.PlayMaker.Actions;
+using ModCommon;
 using UnityEngine;
 
 // Taken and modified from https://github.com/SalehAce1/PaleChampion/blob/master/PaleChampion/PaleChampion/TinkSound.cs
@@ -47,8 +48,9 @@ namespace Tiso
                     euler = Vector3.forward * 270;
                     break;
             }
+
             GameObject effect = Instantiate(
-                TisoSpencer.PreloadedGameObjects["Hornet"].LocateMyFSM("Control").GetAction<ActivateGameObject>("Throw").gameObject.GameObject.Value.GetComponent<TinkEffect>().blockEffect);
+                TisoSpencer.PreloadedGameObjects["Glob"].FindGameObjectInChildren("Stinger").GetComponent<TinkEffect>().blockEffect);
             effect.transform.localPosition = position;
             effect.transform.localRotation = Quaternion.Euler(euler);
             effect.SetActive(true);
