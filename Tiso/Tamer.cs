@@ -47,7 +47,7 @@ namespace Tiso
         }
 
         // Taken and modified from https://github.com/5FiftySix6/HollowKnight.Lost-Lord/blob/master/LostLord/Kin.cs
-        private void ReceiveHit(On.InfectedEnemyEffects.orig_RecieveHitEffect orig, InfectedEnemyEffects self, float attackdirection)
+        private void ReceiveHit(On.InfectedEnemyEffects.orig_RecieveHitEffect orig, InfectedEnemyEffects self, float attack_direction)
         {
             if (self.GetAttr<bool>("didFireThisFrame"))
             {

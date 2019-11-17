@@ -83,13 +83,16 @@
     <Compile Include="Spencer.cs" />
     <Compile Include="StartTiso.cs" />
     <Compile Include="Tamer.cs" />
-    <Compile Include="TisoAttacks.cs" />
+    <Compile Include="TisoMoves.cs" />
     <Compile Include="TisoAudio.cs" />
     <Compile Include="TisoDeath.cs" />
     <Compile Include="TisoSpencer.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assets\0_TisoStatue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Tiso.csproj.DotSettings" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

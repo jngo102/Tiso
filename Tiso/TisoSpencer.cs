@@ -34,6 +34,7 @@ namespace Tiso
                 ("GG_God_Tamer", "Entry Object/Lancer"),
                 ("GG_Hornet_2", "Boss Holder/Hornet Boss 2"),
                 ("GG_Hive_Knight", "Battle Scene/Hive Knight"),
+                ("GG_Hive_Knight", "Battle Scene/Hive Knight/Slash 1"),
                 ("GG_Hive_Knight", "Battle Scene/Globs/Hive Knight Glob"),
             };
         }
@@ -42,6 +43,7 @@ namespace Tiso
         {
             Log("Storing GameObjects");
             PreloadedGameObjects.Add("Bee", preloadedObjects["GG_Hive_Knight"]["Battle Scene/Hive Knight"]);
+            PreloadedGameObjects.Add("Slash", preloadedObjects["GG_Hive_Knight"]["Battle Scene/Hive Knight/Slash 1"]);
             PreloadedGameObjects.Add("Glob", preloadedObjects["GG_Hive_Knight"]["Battle Scene/Globs/Hive Knight Glob"]);
             PreloadedGameObjects.Add("Hornet", preloadedObjects["GG_Hornet_2"]["Boss Holder/Hornet Boss 2"]);
             PreloadedGameObjects.Add("Tamer", preloadedObjects["GG_God_Tamer"]["Entry Object/Lancer"]);
@@ -97,21 +99,14 @@ namespace Tiso
         }
         
         public static AssetBundle TisoAssetsBundle;
-        public static AssetBundle TisoBundle;
-        public static GameObject TisoBoss;
         private void LoadAssets()
         {
             Log("Loading TisoAssets");
             TisoAssetsBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "tisoassets"));
-            Log("Loading Tiso");
-            TisoBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "tiso"));
-
-            /*Log("Tiso Boss Exists? " + (TisoBoss == null) + " " + TisoBoss.name + " " + TisoBoss.GetType());
-            GameObject tisoBoss = UObject.Instantiate(TisoBoss, new Vector2(66.4f, 5.0f), Quaternion.identity);
-            Log("Tiso Boss: " + tisoBoss.name);
-            UObject.DontDestroyOnLoad(tisoBoss);*/
         }
-        
+
+        // Taken from https://github.com/SalehAce1/Fennel/blob/master/ArenaFinder.cs
+
         private object SetVariableHook(Type t, string key, object obj)
         {
             if (key == "statueStateTiso")

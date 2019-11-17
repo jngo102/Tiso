@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using IL.HutongGames.PlayMaker.Actions;
 using ModCommon;
 using UnityEngine;
 using Logger = Modding.Logger;
@@ -34,29 +35,20 @@ namespace Tiso
 
         private IEnumerator TisoStart()
         {
-            /*string tisoScenePath = TisoSpencer.TisoBundle.GetAllScenePaths()[0];
-            Log("Loading Tiso Scene");
-            AsyncOperation operation = USceneManager.LoadSceneAsync(tisoScenePath);
-            while (!operation.isDone) yield return null;
-            Log("Getting Active Scene...");
-            Scene activeScene = USceneManager.GetActiveScene();
-            Log("Active Scene: " + activeScene.name);
-            GameObject[] gos = activeScene.GetRootGameObjects();
-            foreach (var go in gos)
-            {
-                Log("GO Name: " + go.name);
-            }*/
-            
+            /*Log("Instantiating Tiso");
+            GameObject TisoBoss = Instantiate(TisoSpencer.PreloadedGameObjects["Tiso"], new Vector2(66.4f, 10.0f),
+                Quaternion.identity);
+            TisoBoss.SetActive(true);
+            TisoBoss.GetComponent<SpriteRenderer>().material = new Material(Shader.Find("Sprites/Default"));*/
+
             Log("Finding Tiso");
             GameObject tiso = GameObject.Find("Tiso Boss");
             Log("Adding Spencer to Tiso");
             tiso.AddComponent<Spencer>();
-            
+
             int bossLevel = BossSceneController.Instance.BossLevel;
             if (bossLevel > 0) SummonGodTamer();
 
-            TisoSpencer.PreloadedGameObjects["Bee"].PrintSceneHierarchyTree();
-            
             yield return null;
         }
 

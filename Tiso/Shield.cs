@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections;
-using IL.HutongGames.PlayMaker.Actions;
+using HutongGames.PlayMaker.Actions;
 using ModCommon;
 using UnityEngine;
 
@@ -8,14 +8,17 @@ namespace Tiso
 {
     public class Shield : MonoBehaviour
     {
-        private const float ThrowVelocity = 10.0f;
-        private const float Gravity = 5.0f;
-        private const float BounceVelocityY = 10.0f;
+        private const float ThrowVelocity = 15.0f;
+        private const float Gravity = 15.0f;
+        private const float BounceVelocityY = 50.0f;
         private const float LeftY = 51.0f;
         private const float RightY = 71.0f;
+        private const float TimeToMaxHeight = 0.25f;
+        private const float MaxHeight = 20.0f;
 
         public int direction;
-        
+
+        private AudioSource _audio;
         private BoxCollider2D _collider;
         private Rigidbody2D _rb;
         private SpriteRenderer _sr;
@@ -33,13 +36,14 @@ namespace Tiso
         private void Awake()
         {
             gameObject.SetActive(true);
-            gameObject.layer = 11;
+            gameObject.layer = 12;
             
             gameObject.AddComponent<DebugColliders>();
             gameObject.AddComponent<DamageHero>().damageDealt = 1;
             gameObject.AddComponent<TinkEffect>();
             gameObject.AddComponent<TinkSound>();
-            
+
+            _audio = gameObject.AddComponent<AudioSource>();
             _rb = gameObject.AddComponent<Rigidbody2D>();
             _rb.isKinematic = true;
             _collider = gameObject.AddComponent<BoxCollider2D>();
@@ -71,11 +75,13 @@ namespace Tiso
             StartCoroutine(Bounce());
         }
 
+        private float _gravity;
         private IEnumerator Bounce()
         {
-            float time = (2 * BounceVelocityY) / Gravity;
-            float xVel = (_tisoPos.x - transform.position.x) / time;
-            _rb.velocity = new Vector2(xVel, BounceVelocityY);
+            _gravity = -(2 * MaxHeight) / Mathf.Pow(TimeToMaxHeight, 2);
+            float bounceVelocityY = Mathf.Abs(_gravity) * TimeToMaxHeight;
+            float xVel = (_tisoPos.x - transform.position.x * direction) / (2 * TimeToMaxHeight);
+            _rb.velocity = new Vector2(xVel, bounceVelocityY);
             
             Log("Initial Velocity: " + _rb.velocity);
             
@@ -98,8 +104,8 @@ namespace Tiso
                 y1 = transform.position.y;
                 distance = Mathf.Sqrt(Mathf.Pow(x2 - x1, 2) + Mathf.Pow(y2 - y1, 2));
                 Log("Distance: " + distance);
-                _rb.velocity += Vector2.down * Gravity * 0.0GIT1f;
-                yield return new WaitForSeconds(0.01f);
+                _rb.velocity += Vector2.down * _gravity * 0.1f;
+                yield return new WaitForSeconds(0.1f);
             }
             
             OnReturnedToTiso();

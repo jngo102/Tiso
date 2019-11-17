@@ -87,8 +87,7 @@ namespace Tiso
             _collider = gameObject.GetOrAddComponent<BoxCollider2D>();
             _collider.enabled = true;
             _collider.size = new Vector2(1, 2);
-            _collider.offset = new Vector2(-0.5f, 0);
-            gameObject.GetOrAddComponent<DamageHero>().enabled = true;
+            gameObject.AddComponent<DamageHero>();
 
             _recoil = gameObject.GetOrAddComponent<Recoil>();
             _recoil.enabled = true;
@@ -123,14 +122,14 @@ namespace Tiso
         
         private TisoAnimator _anim;
         private TisoAudio _audio;
-        private TisoAttacks _attacks;
+        private TisoMoves _attacks;
         private PhaseControl _phaseCtrl;
         private void AddCustomComponents()
         {
             _anim = gameObject.AddComponent<TisoAnimator>();
             _audio = gameObject.AddComponent<TisoAudio>();
             _phaseCtrl = gameObject.AddComponent<PhaseControl>();
-            _attacks = gameObject.AddComponent<TisoAttacks>();
+            _attacks = gameObject.AddComponent<TisoMoves>();
         }
         
         private void AssignFields()

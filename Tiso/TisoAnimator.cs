@@ -20,7 +20,7 @@ namespace Tiso
             TisoSprites = TisoSpencer.TisoAssetsBundle.LoadAssetWithSubAssets<Sprite>("TisoSprites");
             TisoSpritesCustom = TisoSpencer.TisoAssetsBundle.LoadAssetWithSubAssets<Sprite>("TisoSpritesCustom");
             TisoSpritesGodhome = TisoSpencer.TisoAssetsBundle.LoadAssetWithSubAssets<Sprite>("TisoSpritesGodhome");
-            _shader = TisoSpencer.TisoAssetsBundle.LoadAsset<Shader>("Sprites-Diffuse_Flash");
+            _shader = TisoSpencer.TisoAssetsBundle.LoadAsset<Shader>("Flash Shader");
             AddAnimations();
             
             _sr = gameObject.AddComponent<SpriteRenderer>();
@@ -56,7 +56,7 @@ namespace Tiso
                 FindSprite(TisoSpritesGodhome, "Spinning2"),
                 FindSprite(TisoSpritesCustom, "DashRecover4"),
             };
-
+            
             List<Sprite> evadeAnticSprites = new List<Sprite>
             {
                 FindSprite(TisoSpritesCustom, "EvadeAntic0"),
@@ -97,6 +97,37 @@ namespace Tiso
                 FindSprite(TisoSpritesGodhome, "Land2"),
             };
             
+            List<Sprite> slashAnticSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "SlashAntic0"),
+                FindSprite(TisoSpritesCustom, "SlashAntic0"),
+                FindSprite(TisoSpritesCustom, "SlashAntic0"),
+                FindSprite(TisoSpritesCustom, "SlashAntic0"),
+                FindSprite(TisoSpritesCustom, "SlashAntic0"),
+            };
+            
+            List<Sprite> slash1Sprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "Slash1_0"),
+            };
+
+            List<Sprite> slash2AnticSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "Slash2Antic0"),
+            };
+            
+            List<Sprite> slash2Sprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "Slash2_0"),
+            };
+            
+            List<Sprite> slashRecoverSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "SlashRecover0"),
+                FindSprite(TisoSpritesCustom, "SlashRecover0"),
+                FindSprite(TisoSpritesCustom, "SlashRecover0"),
+            };
+            
             List<Sprite> spinningSprites = new List<Sprite>
             {
                 FindSprite(TisoSpritesGodhome, "Spinning0"),
@@ -131,7 +162,7 @@ namespace Tiso
             animations.Add("Dash Antic", dashAnticSprites);
             animations.Add("Dashing", dashingSprites);
             animations.Add("Dash Recover", dashRecoverSprites);
-            
+
             animations.Add("Evade Antic", evadeAnticSprites);
             animations.Add("Evading", evadingSprites);
             animations.Add("Evade Land", evadeLandSprites);
@@ -141,6 +172,12 @@ namespace Tiso
             animations.Add("Jump Antic", jumpAnticSprites);
             animations.Add("Land", landSprites);
             animations.Add("Spinning", spinningSprites);
+            
+            animations.Add("Slash Antic", slashAnticSprites);
+            animations.Add("Slash 1", slash1Sprites);
+            animations.Add("Slash 2 Antic", slash2AnticSprites);
+            animations.Add("Slash 2", slash2Sprites);
+            animations.Add("Slash Recover", slashRecoverSprites);
             
             animations.Add("Throw Antic", throwAnticSprites);
             animations.Add("Throw", throwSprites);
