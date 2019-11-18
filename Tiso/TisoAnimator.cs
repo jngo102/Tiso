@@ -159,6 +159,18 @@ namespace Tiso
                 FindSprite(TisoSpritesCustom, "ThrowWait2"),
             };
             
+            List<Sprite> upslashAnticSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "UpslashAntic0"),
+                FindSprite(TisoSpritesCustom, "UpslashAntic1"),
+                FindSprite(TisoSpritesCustom, "UpslashAntic2"),
+            };
+            
+            List<Sprite> upslashSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "Upslash0"),
+            };
+            
             animations.Add("Dash Antic", dashAnticSprites);
             animations.Add("Dashing", dashingSprites);
             animations.Add("Dash Recover", dashRecoverSprites);
@@ -183,6 +195,9 @@ namespace Tiso
             animations.Add("Throw", throwSprites);
             animations.Add("Throw Wait", throwWaitSprites);
             animations.Add("Throw Recover", throwRecoverSprites);
+            
+            animations.Add("Upslash Antic", upslashAnticSprites);
+            animations.Add("Upslash", upslashSprites);
         }
 
         public static Sprite FindSprite(Sprite[] spriteList, string spriteName)

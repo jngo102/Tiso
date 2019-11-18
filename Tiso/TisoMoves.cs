@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using HutongGames.PlayMaker.Actions;
 using ModCommon;
 using UnityEngine;
 using Random = System.Random;
@@ -22,16 +23,20 @@ namespace Tiso
         private const float RightX = 71.6f;
         private const float SlashVelocity = 45.0f;
         
-        private static List<Action> _moves;
+        private List<Action> _moves;
+        private Dictionary<Action, int> _repeats;
         
-        private static TisoAnimator _anim;
-        private static TisoAudio _audio;
-        private static TisoMoves _instance;
-        private static PhaseControl _phaseCtrl;
-        private static Random _rand;
-        private static Rigidbody2D _rb;
-        private static Recoil _recoil;
-        private static SpriteRenderer _sr;
+        private TisoAnimator _anim;
+        private TisoAudio _audio;
+        private TisoMoves _instance;
+        private PhaseControl _phaseCtrl;
+        private Random _rand;
+        private Rigidbody2D _rb;
+        private Recoil _recoil;
+        private SpriteRenderer _sr;
+
+        private GameObject _bee;
+        private GameObject _hornet;
 
         private void Awake()
         {
@@ -47,6 +52,9 @@ namespace Tiso
 
             _phaseCtrl.TriggeredPhase2 += OnTriggeredPhase2;
             _phaseCtrl.TriggeredPhase3 += OnTriggeredPhase3;
+
+            _bee = TisoSpencer.PreloadedGameObjects["Bee"];
+            _hornet = TisoSpencer.PreloadedGameObjects["Hornet"];
         }
 
         private void OnTriggeredPhase2()
@@ -76,16 +84,14 @@ namespace Tiso
                 TisoSlash,
             };
 
-            StartCoroutine(IdleAndChooseNextAttack());
-        }
-        
-        private void Update()
-        {
-            /*foreach (var move in _moves)
+            _repeats = new Dictionary<Action, int>
             {
-                Log("Move: " + move.Method.Name);   
-            }
-            Log("");*/
+                [TisoDash] = 0,
+                [TisoJump] = 0,
+                [TisoSlash] = 0,
+            };
+            
+            StartCoroutine(IdleAndChooseNextAttack());
         }
 
         private void FixedUpdate()
@@ -96,10 +102,6 @@ namespace Tiso
             }
 
             CheckWallCollisions();
-        }
-
-        private void LateUpdate()
-        {
         }
 
         private IEnumerator IdleAndChooseNextAttack()
@@ -117,33 +119,60 @@ namespace Tiso
 
             int index = _rand.Next(_moves.Count);
             Action nextMove = _moves[index];
+            
+            // Make sure moves don't occur more than twice in a row
+            while (_repeats[nextMove] > 1)
+            {
+                index = _rand.Next(_moves.Count);
+                Log("Index: " + index);
+                nextMove = _moves[index];
+            }
 
+            foreach (Action move in _moves)
+            {
+                if (move == nextMove)
+                {
+                    _repeats[move]++;
+                }
+                else
+                {
+                    _repeats[move] = 0;
+                }
+            }
+            
             Vector2 pos = transform.position;
             Vector2 heroPos = HeroController.instance.transform.position;
-            if (Mathf.Sqrt(Mathf.Pow(pos.x - heroPos.x, 2) + Mathf.Pow(pos.y - heroPos.y, 2)) < 2.0f)
+            if (Mathf.Sqrt(Mathf.Pow(pos.x - heroPos.x, 2) + Mathf.Pow(pos.y - heroPos.y, 2)) < 4.0f)
             {
-                if (_direction == 1 && pos.x - LeftX > 3.0f || (_direction == -1 && RightX - pos.x > 3.0f))
+                int randNum = _rand.Next(100);
+                int threshold = 70;
+                if (randNum < threshold)
                 {
-                    nextMove = TisoEvade;   
+                    if (_direction == 1 && pos.x - LeftX > 3.0f || (_direction == -1 && RightX - pos.x > 3.0f))
+                    {
+                        nextMove = TisoEvade;
+                    }
+                }
+            }
+            else if (Mathf.Abs(pos.x - heroPos.x) <= 2.0f && heroPos.y - pos.y > 2.0f)
+            {
+                int randNum = _rand.Next(100);
+                int threshold = 50;
+                if (randNum < threshold)
+                {
+                    nextMove = TisoUpslash;   
                 }
             }
 
             Log("Next Move: " + nextMove.Method.Name);
-            try
-            {
-                nextMove.Invoke();
-            }
-            catch (Exception e)
-            {
-                Log(e);
-                throw;
-            }
+            nextMove.Invoke();
         }
         
         public void TisoDash()
         {
             IEnumerator DashAntic()
             {
+                Log("Dash Antic");
                 _anim.PlayAnimation("Dash Antic");
                 _recoil.SetRecoilSpeed(0.0f);
                 
@@ -154,9 +183,13 @@ namespace Tiso
 
             IEnumerator Dashing(float dashTime)
             {
+                Log("Dashing");
                 _anim.PlayAnimation("Dashing", true);
                 _audio.PlayAudioClip("Dash");
                 _rb.velocity = new Vector2(DashVelocity * _direction, 0);
+
+                GameObject gDashEFfect = Instantiate(TisoSpencer.PreloadedGameObjects["G Dash"], transform.position, Quaternion.identity);
+                gDashEFfect.SetActive(true);
 
                 yield return new WaitForSeconds(dashTime);
 
@@ -165,27 +198,24 @@ namespace Tiso
 
             IEnumerator DashRecover()
             {
+                Log("Dash Recover");
                 _anim.PlayAnimation("Dash Recover");
-                if (_rb.velocity.x > 0)
+                while (Mathf.Abs(_rb.velocity.x) >= 2.0f)
                 {
-                    do
-                    {
-                        _rb.velocity += Vector2.left * 0.1f * DashVelocity * (1.0f / _anim.GetAnimDuration("Dash Recover"));
-                        yield return new WaitForSeconds(0.1f);
-                    } 
-                    while (_rb.velocity.x < 0);
-                }
-                else if (_rb.velocity.x < 0)
-                {
-                    do
-                    {
-                        _rb.velocity += Vector2.right * 0.1f * DashVelocity * (1.0f / _anim.GetAnimDuration("Dash Recover"));
-                        yield return new WaitForSeconds(0.1f);
-                    } 
-                    while (_rb.velocity.x < 0);
+                    Log("Velocity X: " + _rb.velocity.x);
+                    _rb.velocity += Vector2.right * -_direction * 0.1f * (DashVelocity / _anim.GetAnimDuration("Dash Recover"));
+                    yield return new WaitForSeconds(0.1f);
                 }
 
+                StartCoroutine(DashEnd());
+            }
+
+            IEnumerator DashEnd()
+            {
+                Log("Dash End");
                 _rb.velocity = Vector2.zero;
+
+                yield return null;
 
                 StartCoroutine(IdleAndChooseNextAttack());
             }
@@ -214,6 +244,8 @@ namespace Tiso
                 _rb.velocity = new Vector2(_rand.Next(10, 20) * _direction, JumpVelocity);
                 _recoil.SetRecoilSpeed(0.0f);
                 
+                Instantiate(TisoSpencer.PreloadedGameObjects["Pt Jump"], transform.position, Quaternion.identity).SetActive(true);
+
                 yield return null;
                 
                 StartCoroutine(Jumping());
@@ -237,6 +269,12 @@ namespace Tiso
                 _audio.PlayAudioClip("Land");
                 _anim.PlayAnimation("Land");
                 
+                GameObject ptLand = gameObject.FindGameObjectInChildren("Pt Land");
+                GameObject slamEffect = gameObject.FindGameObjectInChildren("Slam Effect");
+                
+                Instantiate(ptLand, transform.position + Vector3.down * (_sr.bounds.extents.y / 2), Quaternion.identity).SetActive(true);
+                Instantiate(slamEffect, transform.position + Vector3.down * (_sr.bounds.extents.y / 2), Quaternion.identity).SetActive(true);
+                
                 yield return new WaitForSeconds(_anim.GetAnimDuration("Land"));
                 
                 StartCoroutine(JumpRecover());
@@ -252,11 +290,12 @@ namespace Tiso
             
             StartCoroutine(JumpAntic());
         }
-        
+
         private void TisoSlash()
         {
             IEnumerator SlashAntic()
             {
+                Log("Slash Antic");
                 _anim.PlayAnimation("Slash Antic");
                 _recoil.SetRecoilSpeed(0.0f);
                 
@@ -268,6 +307,7 @@ namespace Tiso
             GameObject slash1;
             IEnumerator Slash1()
             {
+                Log("Slash 1");
                 _anim.PlayAnimation("Slash 1");
                 _audio.PlayAudioClip("Slash");
                 _rb.velocity = Vector2.right * _direction * SlashVelocity;
@@ -275,7 +315,7 @@ namespace Tiso
                 slash1.SetActive(true);
                 slash1.layer = 22;
                 slash1.AddComponent<DamageHero>();
-                slash1.AddComponent<DebugColliders>();
+                //slash1.AddComponent<DebugColliders>();
                 PolygonCollider2D slashCollider = slash1.GetComponent<PolygonCollider2D>();
                 Vector2[] points =
                 {
@@ -294,6 +334,7 @@ namespace Tiso
 
             IEnumerator Slash1Pause()
             {
+                Log("Slash 1 Pause");
                 Destroy(slash1);
                 _rb.velocity = Vector2.zero;
                 
@@ -305,6 +346,7 @@ namespace Tiso
             GameObject slash2;
             IEnumerator Slash2Antic()
             {
+                Log("Slash 2 Antic");
                 _anim.PlayAnimation("Slash 2 Antic");
 
                 yield return new WaitForSeconds(_anim.GetAnimDuration("Slash 2 Antic"));
@@ -314,6 +356,7 @@ namespace Tiso
             
             IEnumerator Slash2()
             {
+                Log("Slash 2");
                 _anim.PlayAnimation("Slash 2");
                 _audio.PlayAudioClip("Slash");
                 _rb.velocity = Vector2.right * _direction * SlashVelocity;
@@ -321,7 +364,7 @@ namespace Tiso
                 slash2.SetActive(true);
                 slash2.layer = 22;
                 slash2.AddComponent<DamageHero>();
-                slash2.AddComponent<DebugColliders>();
+                //slash2.AddComponent<DebugColliders>();
                 PolygonCollider2D slashCollider = slash2.GetComponent<PolygonCollider2D>();
                 Vector2[] points =
                 {
@@ -340,6 +383,7 @@ namespace Tiso
 
             IEnumerator Slash2Pause()
             {
+                Log("Slash 2 Pause");
                 Destroy(slash2);
                 _rb.velocity = Vector2.zero;
                 
@@ -350,6 +394,7 @@ namespace Tiso
 
             IEnumerator SlashRecover()
             {
+                Log("Slash Recover");
                 _anim.PlayAnimation("Slash Recover");
 
                 yield return new WaitForSeconds(_anim.GetAnimDuration("Slash Recover"));
@@ -457,19 +502,69 @@ namespace Tiso
         {
             StartCoroutine(IdleAndChooseNextAttack());
         }
+
+        private void TisoUpslash()
+        {
+            IEnumerator UpslashAntic()
+            {
+                Log("Upslash Antic");
+                _anim.PlayAnimation("Upslash Antic");
+                
+                yield return new WaitForSeconds(_anim.GetAnimDuration("Upslash Antic"));
+
+                StartCoroutine(Upslash());
+            }
+
+            GameObject upslash;
+            IEnumerator Upslash()
+            {
+                Log("Upslash");
+                _anim.PlayAnimation("Upslash");
+
+                upslash = Instantiate(TisoSpencer.PreloadedGameObjects["Slash"], transform.position + Vector3.up * 3.0f, Quaternion.identity);
+                upslash.SetActive(true);
+                upslash.layer = 22;
+                SpriteRenderer sr = upslash.AddComponent<SpriteRenderer>();
+                sr.sprite = TisoAnimator.FindSprite(TisoAnimator.TisoSpritesCustom, "UpslashEffect");
+                upslash.AddComponent<DamageHero>();
+                Vector2[] points =
+                {
+                    new Vector2(-1.5f, -3.0f),
+                    new Vector2(-1.5f, 3.0f),
+                    new Vector2(1.5f, 3.0f),
+                    new Vector2(1.5f, -3.0f),
+                };
+                PolygonCollider2D upslashCollider = upslash.GetComponent<PolygonCollider2D>(); 
+                upslashCollider.points = points;
+                upslash.AddComponent<DebugColliders>();
+
+                yield return new WaitForSeconds(_anim.GetAnimDuration("Upslash"));
+
+                StartCoroutine(UpslashPause());
+            }
+
+            IEnumerator UpslashPause()
+            {
+                Destroy(upslash);
+
+                yield return new WaitForSeconds(0.1f);
+
+                StartCoroutine(UpslashRecover());
+            }
+            
+            IEnumerator UpslashRecover()
+            {
+                yield return null;
+
+                StartCoroutine(IdleAndChooseNextAttack());
+            }
+
+            StartCoroutine(UpslashAntic());
+        }
         
        private bool IsGrounded()
         {
             float rayLength = _sr.bounds.extents.y + Extension;
-            /*GameObject line = new GameObject();
-            LineRenderer lineRenderer = line.AddComponent<LineRenderer>();
-            lineRenderer.startWidth = 0.1f;
-            lineRenderer.endWidth = 0.1f;
-            lineRenderer.startColor = Color.red;
-            lineRenderer.endColor = Color.red;
-            lineRenderer.SetPosition(0, transform.position);
-            lineRenderer.SetPosition(1, transform.position + Vector3.down * rayLength);
-            Destroy(line, 0.01f);*/
             return Physics2D.Raycast(transform.position, Vector2.down, rayLength, CollisionMask);
         }
 
