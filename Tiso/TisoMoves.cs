@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using HutongGames.PlayMaker.Actions;
 using ModCommon;
+using ModCommon.Util;
 using UnityEngine;
 using Random = System.Random;
 
@@ -106,13 +107,14 @@ namespace Tiso
 
         private IEnumerator IdleAndChooseNextAttack()
         {
+            Log("Idle");
             _anim.PlayAnimation("Idle", true);
             _recoil.SetRecoilSpeed(15f);
             
             FaceKnight();
             
-            float minWait = 0.25f;
-            float maxWait = 0.75f;
+            float minWait = 0.1f;
+            float maxWait = 0.5f;
             float waitTime = (float) (_rand.NextDouble() * maxWait) + minWait;
 
             yield return new WaitForSeconds(waitTime);
@@ -188,9 +190,20 @@ namespace Tiso
                 _audio.PlayAudioClip("Dash");
                 _rb.velocity = new Vector2(DashVelocity * _direction, 0);
 
-                GameObject gDashEFfect = Instantiate(TisoSpencer.PreloadedGameObjects["G Dash"], transform.position, Quaternion.identity);
+                GameObject gDashEFfect = Instantiate(TisoSpencer.PreloadedGameObjects["G Dash"], transform.position + Vector3.right * -4.0f * _direction, Quaternion.identity);
                 gDashEFfect.SetActive(true);
 
+                gDashEFfect.transform.rotation = Quaternion.Euler(0, Mathf.Clamp(180 * _direction, 0, 180), 0);
+                
+                PlayMakerFSM fsm = gDashEFfect.LocateMyFSM("FSM");
+                Destroy(fsm);
+                
+                tk2dSpriteAnimator anim = gDashEFfect.GetComponent<tk2dSpriteAnimator>();
+                anim.PlayFromFrame(0);
+                Destroy(gDashEFfect, 0.25F);
+
+                GameCameras.instance.cameraShakeFSM.SendEvent("EnemyKillShake");
+                
                 yield return new WaitForSeconds(dashTime);
 
                 StartCoroutine(DashRecover());
@@ -244,9 +257,14 @@ namespace Tiso
                 _rb.velocity = new Vector2(_rand.Next(10, 20) * _direction, JumpVelocity);
                 _recoil.SetRecoilSpeed(0.0f);
                 
-                Instantiate(TisoSpencer.PreloadedGameObjects["Pt Jump"], transform.position, Quaternion.identity).SetActive(true);
+                GameObject ptJump = Instantiate(TisoSpencer.PreloadedGameObjects["Pt Jump"], transform.position += Vector3.down * (_sr.bounds.extents.y / 2), Quaternion.identity);
+                ptJump.SetActive(true);
+                ParticleSystem ps = ptJump.GetComponent<ParticleSystem>();
+                ps.Play();
+
 
                 yield return null;
+                
                 
                 StartCoroutine(Jumping());
             }

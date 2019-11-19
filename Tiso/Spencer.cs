@@ -97,10 +97,10 @@ namespace Tiso
             _recoil.SetAttr<float>("recoilSpeedBase", 15f);
             _recoil.SetAttr<float>("recoilDuration", 0.15f);
 
-            _hitEff = gameObject.GetOrAddComponent<EnemyHitEffectsUninfected>();
+            _hitEff = gameObject.AddComponent<EnemyHitEffectsUninfected>();
             _hitEff.enabled = true;
             
-            _deathEff = gameObject.GetOrAddComponent<EnemyDeathEffectsUninfected>();
+            _deathEff = gameObject.AddComponent<EnemyDeathEffectsUninfected>();
             _deathEff.enabled = true;
             
             EnemyDreamnailReaction dreamNailReaction = gameObject.GetOrAddComponent<EnemyDreamnailReaction>();
