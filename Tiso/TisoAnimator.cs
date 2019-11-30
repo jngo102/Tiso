@@ -33,13 +33,38 @@ namespace Tiso
         
         private void AddAnimations()
         {
+            List<Sprite> bombThrowAnticSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "BombThrowAntic0"),
+                FindSprite(TisoSpritesCustom, "BombThrowAntic0"),
+                FindSprite(TisoSpritesCustom, "BombThrowAntic1"),
+                FindSprite(TisoSpritesCustom, "BombThrowAntic1"),
+            };
+            
+            List<Sprite> bombThrowSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "BombThrow0"),
+            };
+            
+            List<Sprite> dabAnticSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "DabAntic0"),
+                FindSprite(TisoSpritesCustom, "DabAntic1"),
+            };
+            
+            List<Sprite> dabSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "Dab0"),
+            };
+            
             List<Sprite> dashAnticSprites = new List<Sprite>
             {
                 FindSprite(TisoSpritesCustom, "DashAntic0"),
-                FindSprite(TisoSpritesCustom, "DashAntic0"),
-                FindSprite(TisoSpritesCustom, "DashAntic0"),
-                FindSprite(TisoSpritesCustom, "DashAntic0"),
-                FindSprite(TisoSpritesCustom, "DashAntic0"),
+                FindSprite(TisoSpritesCustom, "DashAntic1"),
+                FindSprite(TisoSpritesCustom, "DashAntic2"),
+                FindSprite(TisoSpritesCustom, "DashAntic3"),
+                FindSprite(TisoSpritesCustom, "DashAntic4"),
+                FindSprite(TisoSpritesCustom, "DashAntic5"),
             };
 
             List<Sprite> dashingSprites = new List<Sprite>
@@ -83,6 +108,13 @@ namespace Tiso
                 FindSprite(TisoSprites, "Idle5"),
             };
             
+            List<Sprite> shieldSpinSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "ShieldSpin0"),
+                FindSprite(TisoSpritesCustom, "ShieldSpin1"),
+                FindSprite(TisoSpritesCustom, "ShieldSpin2"),
+            };
+            
             List<Sprite> jumpAnticSprites = new List<Sprite>
             {
                 FindSprite(TisoSpritesGodhome, "Land2"),
@@ -97,13 +129,19 @@ namespace Tiso
                 FindSprite(TisoSpritesGodhome, "Land2"),
             };
             
+            List<Sprite> raiseToIdleSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "RaiseToIdle0"),
+                FindSprite(TisoSpritesCustom, "RaiseToIdle1"),
+            };
+            
             List<Sprite> slashAnticSprites = new List<Sprite>
             {
                 FindSprite(TisoSpritesCustom, "SlashAntic0"),
-                FindSprite(TisoSpritesCustom, "SlashAntic0"),
-                FindSprite(TisoSpritesCustom, "SlashAntic0"),
-                FindSprite(TisoSpritesCustom, "SlashAntic0"),
-                FindSprite(TisoSpritesCustom, "SlashAntic0"),
+                FindSprite(TisoSpritesCustom, "SlashAntic1"),
+                FindSprite(TisoSpritesCustom, "SlashAntic2"),
+                FindSprite(TisoSpritesCustom, "SlashAntic3"),
+                FindSprite(TisoSpritesCustom, "SlashAntic4"),
             };
             
             List<Sprite> slash1Sprites = new List<Sprite>
@@ -123,9 +161,8 @@ namespace Tiso
             
             List<Sprite> slashRecoverSprites = new List<Sprite>
             {
-                FindSprite(TisoSpritesCustom, "SlashRecover0"),
-                FindSprite(TisoSpritesCustom, "SlashRecover0"),
-                FindSprite(TisoSpritesCustom, "SlashRecover0"),
+                FindSprite(TisoSpritesCustom, "SlashAntic1"),
+                FindSprite(TisoSpritesCustom, "SlashAntic0"),
             };
             
             List<Sprite> spinningSprites = new List<Sprite>
@@ -135,41 +172,51 @@ namespace Tiso
                 FindSprite(TisoSpritesGodhome, "Spinning2"),
             };
 
-            List<Sprite> throwAnticSprites = new List<Sprite>
+            List<Sprite> shieldThrowAnticSprites = new List<Sprite>
             {
-                FindSprite(TisoSpritesCustom, "ThrowAntic0"),
-                FindSprite(TisoSpritesCustom, "ThrowAntic1"),
-                FindSprite(TisoSpritesCustom, "ThrowAntic2"),
+                FindSprite(TisoSpritesCustom, "ShieldThrowAntic0"),
+                FindSprite(TisoSpritesCustom, "ShieldThrowAntic1"),
+                FindSprite(TisoSpritesCustom, "ShieldThrowAntic2"),
             };
             
-            List<Sprite> throwRecoverSprites = new List<Sprite>
+            List<Sprite> shieldThrowRecoverSprites = new List<Sprite>
             {
-                FindSprite(TisoSpritesCustom, "ThrowRecover0"),
+                FindSprite(TisoSpritesCustom, "ShieldThrowRecover0"),
             };
             
-            List<Sprite> throwSprites = new List<Sprite>
+            List<Sprite> shieldThrowSprites = new List<Sprite>
             {
-                FindSprite(TisoSpritesCustom, "Throw0"),
+                FindSprite(TisoSpritesCustom, "ShieldThrow0"),
             };
             
-            List<Sprite> throwWaitSprites = new List<Sprite>
+            List<Sprite> shieldThrowWaitSprites = new List<Sprite>
             {
-                FindSprite(TisoSpritesCustom, "ThrowWait0"),
-                FindSprite(TisoSpritesCustom, "ThrowWait1"),
-                FindSprite(TisoSpritesCustom, "ThrowWait2"),
+                FindSprite(TisoSpritesCustom, "ShieldThrowWait0"),
+                FindSprite(TisoSpritesCustom, "ShieldThrowWait1"),
+                FindSprite(TisoSpritesCustom, "ShieldThrowWait2"),
+            };
+
+            List<Sprite> turnSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "Turn0"),
             };
             
             List<Sprite> upslashAnticSprites = new List<Sprite>
             {
                 FindSprite(TisoSpritesCustom, "UpslashAntic0"),
-                FindSprite(TisoSpritesCustom, "UpslashAntic1"),
-                FindSprite(TisoSpritesCustom, "UpslashAntic2"),
+                FindSprite(TisoSpritesCustom, "UpslashAntic0"),
             };
             
             List<Sprite> upslashSprites = new List<Sprite>
             {
                 FindSprite(TisoSpritesCustom, "Upslash0"),
             };
+            
+            animations.Add("Bomb Throw Antic", bombThrowAnticSprites);
+            animations.Add("Bomb Throw", bombThrowSprites);
+            
+            animations.Add("Dab Antic", dabAnticSprites);
+            animations.Add("Dab", dabSprites);
             
             animations.Add("Dash Antic", dashAnticSprites);
             animations.Add("Dashing", dashingSprites);
@@ -181,9 +228,13 @@ namespace Tiso
             
             animations.Add("Idle", idleSprites);
             
+            animations.Add("Shield Spin", shieldSpinSprites);
+            
             animations.Add("Jump Antic", jumpAnticSprites);
             animations.Add("Land", landSprites);
             animations.Add("Spinning", spinningSprites);
+            
+            animations.Add("Raise to Idle", raiseToIdleSprites);
             
             animations.Add("Slash Antic", slashAnticSprites);
             animations.Add("Slash 1", slash1Sprites);
@@ -191,10 +242,12 @@ namespace Tiso
             animations.Add("Slash 2", slash2Sprites);
             animations.Add("Slash Recover", slashRecoverSprites);
             
-            animations.Add("Throw Antic", throwAnticSprites);
-            animations.Add("Throw", throwSprites);
-            animations.Add("Throw Wait", throwWaitSprites);
-            animations.Add("Throw Recover", throwRecoverSprites);
+            animations.Add("Throw Antic", shieldThrowAnticSprites);
+            animations.Add("Throw", shieldThrowSprites);
+            animations.Add("Throw Wait", shieldThrowWaitSprites);
+            animations.Add("Throw Recover", shieldThrowRecoverSprites);
+            
+            animations.Add("Turn", turnSprites);
             
             animations.Add("Upslash Antic", upslashAnticSprites);
             animations.Add("Upslash", upslashSprites);

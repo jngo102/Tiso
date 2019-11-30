@@ -39,24 +39,6 @@ namespace Tiso
             StartCoroutine(AddComponent());
         }
 
-        private static void GetNailClash()
-        {
-            foreach (GameObject go in Resources.FindObjectsOfTypeAll<GameObject>())
-            {
-                if (go.PrintSceneHierarchyPath() == "Hollow Shade\\Slash")
-                {
-                    TisoSpencer.PreloadedGameObjects["Parry FX"] = go.LocateMyFSM("nail_clash_tink").GetAction<SpawnObjectFromGlobalPool>("No Box Down", 1).gameObject.Value;
-                    AudioClip tinkAudio = go.LocateMyFSM("nail_clash_tink").GetAction<AudioPlayerOneShot>("Blocked Hit", 5).audioClips[0];
-                    GameObject clashAudioGO = new GameObject();
-                    AudioSource clashAudio = clashAudioGO.AddComponent<AudioSource>();
-                    clashAudio.clip = tinkAudio;
-                    clashAudio.pitch = Random.Range(0.85f, 1.15f);
-                    TisoSpencer.PreloadedGameObjects["Clash Tink"] = clashAudioGO;
-                    break;
-                }
-            }
-        }
-        
         private void SetStatue()
         {
             Log("Setting up statues...");
@@ -111,8 +93,6 @@ namespace Tiso
         {
             yield return null;
 
-            //GetNailClash();
-            
             if (PlayerData.instance.statueStateBroodingMawlek.usingAltVersion)
             {
                 GameObject.Find("Battle Scene").AddComponent<StartTiso>();;

@@ -72,7 +72,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\TisoParticles.cs" />
+    <Compile Include="Bomb.cs" />
     <Compile Include="PhaseControl.cs" />
     <Compile Include="Shield.cs" />
     <Compile Include="TinkSound.cs" />

@@ -8,12 +8,12 @@ namespace Tiso
 {
     public class Shield : MonoBehaviour
     {
-        private const float ThrowVelocity = 15.0f;
-        private const float Gravity = 15.0f;
+        private const float BounceVelocityY = 30.0f;
+        private const float Gravity = 120.0f;
         private const float LeftX = 51.8f;
         private const float RightX = 72.0f;
-        private const float TimeInAir = 1.0f;
-        private const float MaxHeight = 5.0f;
+        private const float ThrowVelocity = 60.0f;
+        private const float TimeInAir = 0.5f;
 
         public int direction;
 
@@ -55,6 +55,15 @@ namespace Tiso
             _sr.sprite = TisoAnimator.FindSprite(TisoAnimator.TisoSpritesGodhome, "Shield");
         }
 
+        private bool _bouncing;
+        private void FixedUpdate()
+        {
+            if (_bouncing)
+            {
+                _rb.velocity += Vector2.down * Gravity * Time.deltaTime;   
+            }
+        }
+        
         private void Start()
         {
             StartCoroutine(Thrown());
@@ -76,15 +85,10 @@ namespace Tiso
         
         private IEnumerator Bounce()
         {
+            _bouncing = true;
             Vector2 pos = transform.position; 
-            float dx = _tisoPos.x - pos.x;
-            float dy = _tisoPos.y - pos.y;
-            float time = Mathf.Sqrt(2 * MaxHeight / Gravity) + Mathf.Sqrt(2 * MaxHeight / Gravity);
-            float xVel = dx / time;
-            float yVel = Mathf.Sqrt(2 * Gravity * MaxHeight);
-            _rb.velocity = new Vector2(xVel, yVel);
-
-            Log("Initial Velocity: " + _rb.velocity);
+            float xVel = (_tisoPos.x - pos.x) / TimeInAir;
+            _rb.velocity = new Vector2(xVel, BounceVelocityY);
             
             yield return null;
 
@@ -99,16 +103,14 @@ namespace Tiso
             float y2 = _tisoPos.y;
 
             float distance = Mathf.Sqrt(Mathf.Pow(x2 - x1, 2) + Mathf.Pow(y2 - y1, 2));
-            while (distance > 5.0f)
+            while (distance > 2.0f)
             {
                 x1 = transform.position.x;
                 y1 = transform.position.y;
                 distance = Mathf.Sqrt(Mathf.Pow(x2 - x1, 2) + Mathf.Pow(y2 - y1, 2));
-                Log("Distance: " + distance + ", Velocity: " + _rb.velocity);
-                _rb.velocity += Vector2.down * Gravity * 0.01f;
-                yield return new WaitForSeconds(0.01f);
+                yield return null;
             }
-            
+
             OnReturnedToTiso();
         }
 

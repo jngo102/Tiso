@@ -31,6 +31,8 @@ namespace Tiso
         {
             return new List<(string, string)>
             {
+                ("Fungus3_02", "Jellyfish/Corpse Jellyfish(Clone)"),
+                ("GG_Crystal_Guardian_2", "Laser Turret Mega"),
                 ("GG_God_Tamer", "Entry Object/Lancer"),
                 ("GG_Hornet_2", "Boss Holder/Hornet Boss 2"),
                 ("GG_Hornet_2", "Boss Holder/Hornet Boss 2/G Dash Effect"),
@@ -45,11 +47,13 @@ namespace Tiso
         {
             Log("Storing GameObjects");
             PreloadedGameObjects.Add("Bee", preloadedObjects["GG_Hive_Knight"]["Battle Scene/Hive Knight"]);
-            PreloadedGameObjects.Add("Pt Jump", preloadedObjects["GG_Hive_Knight"]["Battle Scene/Hive Knight/Pt Jump"]);
-            PreloadedGameObjects.Add("Slash", preloadedObjects["GG_Hive_Knight"]["Battle Scene/Hive Knight/Slash 1"]);
+            PreloadedGameObjects.Add("G Dash", preloadedObjects["GG_Hornet_2"]["Boss Holder/Hornet Boss 2/G Dash Effect"]);
             PreloadedGameObjects.Add("Glob", preloadedObjects["GG_Hive_Knight"]["Battle Scene/Globs/Hive Knight Glob"]);
             PreloadedGameObjects.Add("Hornet", preloadedObjects["GG_Hornet_2"]["Boss Holder/Hornet Boss 2"]);
-            PreloadedGameObjects.Add("G Dash", preloadedObjects["GG_Hornet_2"]["Boss Holder/Hornet Boss 2/G Dash Effect"]);
+            PreloadedGameObjects.Add("Ooma Corpse", preloadedObjects["Fungus3_02"]["Jellyfish/Corpse Jellyfish(Clone)"]);
+            PreloadedGameObjects.Add("Laser", preloadedObjects["GG_Crystal_Guardian_2"]["Laser Turret Mega"]);
+            PreloadedGameObjects.Add("Pt Jump", preloadedObjects["GG_Hive_Knight"]["Battle Scene/Hive Knight/Pt Jump"]);
+            PreloadedGameObjects.Add("Slash", preloadedObjects["GG_Hive_Knight"]["Battle Scene/Hive Knight/Slash 1"]);
             PreloadedGameObjects.Add("Tamer", preloadedObjects["GG_God_Tamer"]["Entry Object/Lancer"]);
 
             Instance = this;

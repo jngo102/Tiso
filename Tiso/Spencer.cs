@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using HutongGames.PlayMaker.Actions;
 using ModCommon;
 using ModCommon.Util;
 using Modding;
@@ -29,7 +31,7 @@ namespace Tiso
             _control = go.LocateMyFSM("Control");
             go.SetActive(true);
             go.layer = 11;
-            
+
             AddComponents();
             DestroyComponents();
             
@@ -63,20 +65,19 @@ namespace Tiso
             Log("Adding Custom Components");
             AddCustomComponents();
             
+            Log("Assigning Fields");
             AssignFields();
             
+            Log("Playing Raise to Idle Animation");
+            _anim.PlayAnimation("Raise to Idle", false, 0.04167f);
+
+            yield return new WaitForSeconds(_anim.GetAnimDuration("Raise to Idle"));
+
             _anim.PlayAnimation("Idle", true);
-
-            yield return new WaitForSeconds(1.0f);
-
+            
             //gameObject.AddComponent<DebugColliders>();
 
             gameObject.PrintSceneHierarchyTree();
-        }
-        
-        private void Update()
-        {
-            
         }
 
         private void AddComponents()
@@ -130,6 +131,8 @@ namespace Tiso
             _audio = gameObject.AddComponent<TisoAudio>();
             _phaseCtrl = gameObject.AddComponent<PhaseControl>();
             _attacks = gameObject.AddComponent<TisoMoves>();
+            
+            _sr = GetComponent<SpriteRenderer>();
         }
         
         private void AssignFields()
@@ -153,7 +156,7 @@ namespace Tiso
                 fi.SetValue(_deathEff, fi.GetValue(hornetDeathEffects));
             }
         }
-
+        
         private List<string> validColliders = new List<string>
         {
             "Slash", "AltSlash", "DownSlash", "UpSlash", "Hit L", "Hit R", "Hit U", "Hit D", "Great Slash",
@@ -165,6 +168,7 @@ namespace Tiso
         {
             if (validColliders.Any(@string => collider.name.Contains(@string)))
             {
+                Log("Hit by: " + collider.name);
                 _anim.FlashWhite(0.25f);
             }
             else if (collider.name == "Hitbox")
