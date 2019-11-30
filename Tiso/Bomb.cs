@@ -45,7 +45,6 @@ namespace Tiso
             
             yield return new WaitForSeconds(Lifetime);
             
-            Log("EXPLODE!!!!");
             Explode();
         }
 
@@ -69,16 +68,14 @@ namespace Tiso
             GameObject oomaCorpse = Instantiate(TisoSpencer.PreloadedGameObjects["Ooma Corpse"], Vector2.zero, Quaternion.identity);
             oomaCorpse.SetActive(true);
             PlayMakerFSM corpseFSM = oomaCorpse.LocateMyFSM("corpse");
-            GameObject core = corpseFSM.GetAction<SpawnObjectFromGlobalPool>("Instant Explosion").gameObject.Value;
-            GameObject coreInstance = Instantiate(core, transform.position += Vector3.up, Quaternion.identity);
-            coreInstance.SetActive(true);
-            Destroy(coreInstance.LocateMyFSM("damages_enemy"));
+            GameObject explosion = corpseFSM.GetAction<SpawnObjectFromGlobalPool>("Instant Explosion").gameObject.Value;
+            GameObject explosionInstance = Instantiate(explosion, transform.position, Quaternion.identity);
+            explosionInstance.SetActive(true);
+            explosionInstance.AddComponent<NonBouncer>();
+            Destroy(explosionInstance.LocateMyFSM("damages_enemy"));
             Destroy(gameObject);
         }
         
-        
-            
-            
         private static void Log(object message) => Modding.Logger.Log("[Bomb]: " + message);
     }
 }

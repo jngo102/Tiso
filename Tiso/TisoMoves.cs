@@ -412,8 +412,8 @@ namespace Tiso
                 PolygonCollider2D slashCollider = slash2.GetComponent<PolygonCollider2D>();
                 Vector2[] points =
                 {
-                    new Vector2(2.5f * _direction, -1.0f),
-                    new Vector2(2.5f * _direction, 1.0f),
+                    new Vector2(2.8f * _direction, -1.0f),
+                    new Vector2(2.8f * _direction, 1.0f),
                     new Vector2(-2.5f * _direction, 1.0f),
                     new Vector2(-2.5f * _direction, -1.0f),
                 };
@@ -455,28 +455,28 @@ namespace Tiso
         {
             IEnumerator ThrowAntic()
             {
-                _anim.PlayAnimation("Throw Antic", true);
+                _anim.PlayAnimation("Shield Throw Antic", true);
                 _recoil.SetRecoilSpeed(0.0f);
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(_anim.GetAnimDuration("Shield Throw Antic"));
 
                 StartCoroutine(Throw());
             }
 
             IEnumerator Throw()
             {
-                _anim.PlayAnimation("Throw");
+                _anim.PlayAnimation("Shield Throw");
                 Vector3 shieldPos = transform.position + Vector3.down;
                 _shieldGO = Instantiate(new GameObject("Shield"), shieldPos, Quaternion.identity);
                 _shieldComponent = _shieldGO.AddComponent<Shield>();
                 _shieldComponent.direction = _direction;
-                yield return new WaitForSeconds(_anim.GetAnimDuration("Throw"));
+                yield return new WaitForSeconds(_anim.GetAnimDuration("Shield Throw"));
                 
                 StartCoroutine(ThrowWait());
             }
 
             IEnumerator ThrowWait()
             {
-                _anim.PlayAnimation("Throw Wait", true);
+                _anim.PlayAnimation("Shield Throw Wait", true);
 
                 yield return null;
                 
@@ -492,8 +492,8 @@ namespace Tiso
             IEnumerator ThrowRecover()
             {
                 Destroy(_shieldGO);
-                _anim.PlayAnimation("Throw Recover");
-               yield return new WaitForSeconds(_anim.GetAnimDuration("Throw Recover"));
+                _anim.PlayAnimation("Shield Throw Recover");
+               yield return new WaitForSeconds(_anim.GetAnimDuration("Shield Throw Recover"));
 
                _shieldComponent.ReturnedToTiso -= OnReturnedToTiso;
 

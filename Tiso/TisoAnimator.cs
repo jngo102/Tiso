@@ -174,9 +174,13 @@ namespace Tiso
 
             List<Sprite> shieldThrowAnticSprites = new List<Sprite>
             {
-                FindSprite(TisoSpritesCustom, "ShieldThrowAntic0"),
-                FindSprite(TisoSpritesCustom, "ShieldThrowAntic1"),
-                FindSprite(TisoSpritesCustom, "ShieldThrowAntic2"),
+                FindSprite(TisoSpritesGodhome, "Land2"),
+                FindSprite(TisoSpritesCustom, "ShieldSpin0"),
+                FindSprite(TisoSpritesCustom, "ShieldSpin1"),
+                FindSprite(TisoSpritesCustom, "ShieldSpin2"),
+                FindSprite(TisoSpritesCustom, "ShieldSpin0"),
+                FindSprite(TisoSpritesCustom, "ShieldSpin1"),
+                FindSprite(TisoSpritesCustom, "ShieldSpin2"),
             };
             
             List<Sprite> shieldThrowRecoverSprites = new List<Sprite>
@@ -242,10 +246,10 @@ namespace Tiso
             animations.Add("Slash 2", slash2Sprites);
             animations.Add("Slash Recover", slashRecoverSprites);
             
-            animations.Add("Throw Antic", shieldThrowAnticSprites);
-            animations.Add("Throw", shieldThrowSprites);
-            animations.Add("Throw Wait", shieldThrowWaitSprites);
-            animations.Add("Throw Recover", shieldThrowRecoverSprites);
+            animations.Add("Shield Throw Antic", shieldThrowAnticSprites);
+            animations.Add("Shield Throw", shieldThrowSprites);
+            animations.Add("Shield Throw Wait", shieldThrowWaitSprites);
+            animations.Add("Shield Throw Recover", shieldThrowRecoverSprites);
             
             animations.Add("Turn", turnSprites);
             

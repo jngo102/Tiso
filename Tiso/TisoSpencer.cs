@@ -135,7 +135,7 @@ namespace Tiso
             _previousScene = previousScene.name;
         }
         
-        private string OnLangGet(string key, string sheettitle)
+        private string OnLangGet(string key, string sheetTitle)
         {
             /*string text = Language.Language.GetInternal(key, sheettitle);
             Log("Key: " + key);
@@ -143,7 +143,7 @@ namespace Tiso
             return text;*/
             switch (key)
             {
-                case "Tiso_Name":
+                case "TISO_NAME":
                     return "Tiso";
                 case "MAWLEK_SUPER" when _previousScene == "GG_Workshop" && PlayerData.instance.statueStateBroodingMawlek.usingAltVersion:
                     return "";
@@ -151,18 +151,21 @@ namespace Tiso
                     return "Tiso";
                 case "MAWLEK_SUB" when _previousScene == "GG_Workshop" && PlayerData.instance.statueStateBroodingMawlek.usingAltVersion:
                     return "by Tiso Spencer";
-                case "Tiso_Desc":
+                case "TISO_DESC":
                     return "Tiso Placeholder";
-                case "Tiso_1":
-                    return "I AM TISO!!!! 1";
-                case "Tiso_2":
-                    return "I AM TISO!!!! 2";
-                case "Tiso_3":
-                    return "I AM TISO!!!! 3";
-                case "Tiso_4":
-                    return "I AM TISO!!!! 4";
+                // "_1" is appended to the end of dream nail dialog because there is an initial convo amount of 1
+                case "TISO_DIALOG_1_1":
+                    return "I, Tiso, will be victorious!";
+                case "TISO_DIALOG_2_1":
+                    return "The thrill of a real battle, what a joy!";
+                case "TISO_DIALOG_3_1":
+                    return "Such exhilaration from the tension of a fight!";
+                case "TISO_DIALOG_4_1":
+                    return "Once I defeat this weakling, the Colosseum awaits!";
+                case "TISO_DIALOG_5_1":
+                    return "I hope I don't run into that Cranky Templar fellow after I win this one...'";
                 default:
-                    return Language.Language.GetInternal(key, sheettitle);
+                    return Language.Language.GetInternal(key, sheetTitle);
             }
         }
 
@@ -201,9 +204,13 @@ namespace Tiso
             USceneManager.activeSceneChanged -= SceneChanged;
 
             MawlekFinder finder = GameManager.instance.gameObject.GetComponent<MawlekFinder>();
+            Spencer spencer = GameManager.instance.gameObject.GetComponent<Spencer>();
 
             if (finder != null)
                 UObject.Destroy(finder);
+            
+            if (spencer != null)
+                UObject.Destroy(spencer);
         }
     }
 }

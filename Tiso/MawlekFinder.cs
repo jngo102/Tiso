@@ -70,13 +70,13 @@ namespace Tiso
             bs.statueDisplayAlt = alt;
 
             BossStatue.BossUIDetails details = new BossStatue.BossUIDetails();
-            details.nameKey = details.nameSheet = "Tiso_Name";
-            details.descriptionKey = details.descriptionSheet = "Tiso_Desc";
+            details.nameKey = details.nameSheet = "TISO_NAME";
+            details.descriptionKey = details.descriptionSheet = "TISO_DESC";
             bs.dreamBossDetails = details;
 
             GameObject altLever = statue.FindGameObjectInChildren("alt_lever");
             altLever.SetActive(true);
-            altLever.transform.position = new Vector3(45.5f, 7.5f, 0.9f);
+            altLever.transform.position = new Vector3(46.3f, 7.3f, 0.0f);
 
             GameObject switchBracket = altLever.FindGameObjectInChildren("GG_statue_switch_bracket");
             switchBracket.SetActive(true);

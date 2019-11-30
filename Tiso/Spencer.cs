@@ -23,6 +23,7 @@ namespace Tiso
         private SpriteRenderer _sr;
         private EnemyHitEffectsUninfected _hitEff;
         private EnemyDeathEffectsUninfected _deathEff;
+        private Random _rand;
         private Recoil _recoil;
 
         private void Awake()
@@ -32,29 +33,11 @@ namespace Tiso
             go.SetActive(true);
             go.layer = 11;
 
+            _rand = new Random();
+            
             AddComponents();
             DestroyComponents();
-            
-            ModHooks.Instance.LanguageGetHook += OnLangGet;
         }
-
-        private string OnLangGet(string key, string sheettitle)
-        {
-            switch (key)
-            {
-                case "Tiso_1":
-                    return "I AM TISO!!!! 1";
-                case "Tiso_2":
-                    return "I AM TISO!!!! 2";
-                case "Tiso_3":
-                    return "I AM TISO!!!! 3";
-                case "Tiso_4":
-                    return "I AM TISO!!!! 4";
-                default:
-                    return Language.Language.GetInternal(key, sheettitle);
-            }
-        }
-
         
         private IEnumerator Start()
         { 
@@ -80,6 +63,7 @@ namespace Tiso
             gameObject.PrintSceneHierarchyTree();
         }
 
+        private EnemyDreamnailReaction _dnReaction;
         private void AddComponents()
         {
             _rb = gameObject.GetOrAddComponent<Rigidbody2D>();
@@ -104,11 +88,27 @@ namespace Tiso
             _deathEff = gameObject.AddComponent<EnemyDeathEffectsUninfected>();
             _deathEff.enabled = true;
             
-            EnemyDreamnailReaction dreamNailReaction = gameObject.GetOrAddComponent<EnemyDreamnailReaction>();
-            dreamNailReaction.enabled = true;
-            dreamNailReaction.SetConvoTitle("Tiso_2");
+            _dnReaction = gameObject.AddComponent<EnemyDreamnailReaction>();
+            _dnReaction.enabled = true;
+            string[] dnDialogue =
+            {
+                "TISO_DIALOG_1",
+                "TISO_DIALOG_1",
+                "TISO_DIALOG_1",
+                "TISO_DIALOG_2",
+                "TISO_DIALOG_2",
+                "TISO_DIALOG_2",
+                "TISO_DIALOG_3",
+                "TISO_DIALOG_3",
+                "TISO_DIALOG_3",
+                "TISO_DIALOG_4",
+                "TISO_DIALOG_4",
+                "TISO_DIALOG_4",
+                "TISO_DIALOG_5",
+            };
+            _dnReaction.SetConvoTitle(dnDialogue[_rand.Next(dnDialogue.Length)]);
 
-            gameObject.GetOrAddComponent<ExtraDamageable>().enabled = true;
+            gameObject.AddComponent<ExtraDamageable>().enabled = true;
         }
 
         private void DestroyComponents()
@@ -168,18 +168,30 @@ namespace Tiso
         {
             if (validColliders.Any(@string => collider.name.Contains(@string)))
             {
-                Log("Hit by: " + collider.name);
                 _anim.FlashWhite(0.25f);
             }
             else if (collider.name == "Hitbox")
             {
+                string[] dnDialogue =
+                {
+                    "TISO_DIALOG_1",
+                    "TISO_DIALOG_1",
+                    "TISO_DIALOG_1",
+                    "TISO_DIALOG_2",
+                    "TISO_DIALOG_2",
+                    "TISO_DIALOG_2",
+                    "TISO_DIALOG_3",
+                    "TISO_DIALOG_3",
+                    "TISO_DIALOG_3",
+                    "TISO_DIALOG_4",
+                    "TISO_DIALOG_4",
+                    "TISO_DIALOG_4",
+                    "TISO_DIALOG_5",
+                };
+
+                _dnReaction.SetConvoTitle(dnDialogue[_rand.Next(dnDialogue.Length)]);
                 _anim.FlashWhite(1.0f);
             }
-        }
-
-        private void OnDestroy()
-        {
-            ModHooks.Instance.LanguageGetHook -= OnLangGet;
         }
 
         public static void Log(object message) => Logger.Log("[Spencer]" + message);
