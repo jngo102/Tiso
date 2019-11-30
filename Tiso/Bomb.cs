@@ -30,13 +30,13 @@ namespace Tiso
 
             float heroX = HeroController.instance.transform.position.x;
             float bombX = transform.position.x;
-            float velX = heroX - bombX;
+            float velX = (heroX - bombX) / Lifetime;
 
             _cc.radius = 0.2f;
             _cc.isTrigger = true;
             
             _rb.isKinematic = true;
-            _rb.velocity = new Vector2(velX / Lifetime, ThrowHeight);
+            _rb.velocity = new Vector2(velX, ThrowHeight);
 
             _sr.sprite = TisoAnimator.FindSprite(TisoAnimator.TisoSpritesCustom, "Bomb");
 
