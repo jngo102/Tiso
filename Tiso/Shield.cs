@@ -34,21 +34,22 @@ namespace Tiso
         
         private void Awake()
         {
-            gameObject.SetActive(true);
-            gameObject.layer = 12;
+            GameObject go = gameObject;
+            go.SetActive(true);
+            go.layer = 12;
             
-            gameObject.AddComponent<DebugColliders>();
-            gameObject.AddComponent<DamageHero>().damageDealt = 1;
-            gameObject.AddComponent<TinkEffect>();
-            gameObject.AddComponent<TinkSound>();
+            go.AddComponent<DebugColliders>();
+            go.AddComponent<DamageHero>().damageDealt = 1;
+            go.AddComponent<TinkEffect>();
+            go.AddComponent<TinkSound>();
 
-            _audio = gameObject.AddComponent<AudioSource>();
-            _rb = gameObject.AddComponent<Rigidbody2D>();
+            _audio = go.AddComponent<AudioSource>();
+            _rb = go.AddComponent<Rigidbody2D>();
             _rb.isKinematic = true;
-            _collider = gameObject.AddComponent<BoxCollider2D>();
+            _collider = go.AddComponent<BoxCollider2D>();
             _collider.enabled = true;
             _collider.size = new Vector2(2.0f, 0.75f);
-            _sr = gameObject.AddComponent<SpriteRenderer>();
+            _sr = go.AddComponent<SpriteRenderer>();
             _tiso = GameObject.Find("Tiso Boss");
             _tisoPos = _tiso.transform.position;
 
@@ -73,12 +74,7 @@ namespace Tiso
         {
             _rb.velocity = Vector2.right * ThrowVelocity * direction;
 
-            while (transform.position.x >= LeftX && transform.position.x <= RightX)
-            {
-                yield return null;
-            }        
-
-            Log("Hit Wall");
+            while (transform.position.x >= LeftX && transform.position.x <= RightX) yield return null;
 
             StartCoroutine(Bounce());
         }
@@ -112,11 +108,6 @@ namespace Tiso
             }
 
             OnReturnedToTiso();
-        }
-
-        private void OnCollisionEnter2D(Collision2D collision)
-        {
-            Log("Collided with: " + collision.collider.gameObject.name);
         }
 
         private static void Log(object message) => Modding.Logger.Log("[Shield]: " + message);

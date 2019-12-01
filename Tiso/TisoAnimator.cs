@@ -82,6 +82,28 @@ namespace Tiso
                 FindSprite(TisoSpritesCustom, "DashRecover4"),
             };
             
+            List<Sprite> diveAnticSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "DashRecover4"),
+                FindSprite(TisoSpritesCustom, "DiveAntic0"),
+                FindSprite(TisoSpritesCustom, "DiveAntic1"),
+                FindSprite(TisoSpritesCustom, "DiveAntic2"),
+                FindSprite(TisoSpritesCustom, "DiveAntic3"),
+            };
+
+            List<Sprite> divingSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "Diving0"),
+                FindSprite(TisoSpritesCustom, "Diving1"),
+            };
+
+            List<Sprite> diveLandSprites = new List<Sprite>
+            {
+                FindSprite(TisoSpritesCustom, "DiveLand0"),
+                FindSprite(TisoSpritesCustom, "DiveLand1"),
+                FindSprite(TisoSpritesCustom, "DiveLand2"),
+            };
+            
             List<Sprite> evadeAnticSprites = new List<Sprite>
             {
                 FindSprite(TisoSpritesCustom, "EvadeAntic0"),
@@ -142,6 +164,8 @@ namespace Tiso
                 FindSprite(TisoSpritesCustom, "SlashAntic2"),
                 FindSprite(TisoSpritesCustom, "SlashAntic3"),
                 FindSprite(TisoSpritesCustom, "SlashAntic4"),
+                FindSprite(TisoSpritesCustom, "SlashAntic3"),
+                FindSprite(TisoSpritesCustom, "SlashAntic4"),
             };
             
             List<Sprite> slash1Sprites = new List<Sprite>
@@ -195,6 +219,7 @@ namespace Tiso
             
             List<Sprite> shieldThrowWaitSprites = new List<Sprite>
             {
+                FindSprite(TisoSpritesGodhome, "Land2"),
                 FindSprite(TisoSpritesCustom, "ShieldThrowWait0"),
                 FindSprite(TisoSpritesCustom, "ShieldThrowWait1"),
                 FindSprite(TisoSpritesCustom, "ShieldThrowWait2"),
@@ -226,6 +251,10 @@ namespace Tiso
             animations.Add("Dashing", dashingSprites);
             animations.Add("Dash Recover", dashRecoverSprites);
 
+            animations.Add("Dive Antic", diveAnticSprites);
+            animations.Add("Diving", divingSprites);
+            animations.Add("Dive Land", diveLandSprites);
+            
             animations.Add("Evade Antic", evadeAnticSprites);
             animations.Add("Evading", evadingSprites);
             animations.Add("Evade Land", evadeLandSprites);

@@ -51,8 +51,6 @@ namespace Tiso
         private void FixedUpdate()
         {
             _rb.velocity += Vector2.down * Gravity * Time.deltaTime;
-            Quaternion rotation = transform.rotation;
-            rotation.y += 10.0f;
         }
         
         private void OnTriggerEnter2D(Collider2D collider)
@@ -71,7 +69,11 @@ namespace Tiso
             GameObject explosion = corpseFSM.GetAction<SpawnObjectFromGlobalPool>("Instant Explosion").gameObject.Value;
             GameObject explosionInstance = Instantiate(explosion, transform.position, Quaternion.identity);
             explosionInstance.SetActive(true);
-            explosionInstance.AddComponent<NonBouncer>();
+            foreach (Transform childTransform in explosionInstance.transform)
+            {
+                GameObject child = childTransform.gameObject;
+                child.AddComponent<NonBouncer>().SetActive(true);
+            }
             Destroy(explosionInstance.LocateMyFSM("damages_enemy"));
             Destroy(gameObject);
         }

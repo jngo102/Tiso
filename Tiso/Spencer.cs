@@ -90,20 +90,13 @@ namespace Tiso
             
             _dnReaction = gameObject.AddComponent<EnemyDreamnailReaction>();
             _dnReaction.enabled = true;
+            // Add extras to make meme dialog 5 less frequent
             string[] dnDialogue =
             {
-                "TISO_DIALOG_1",
-                "TISO_DIALOG_1",
-                "TISO_DIALOG_1",
-                "TISO_DIALOG_2",
-                "TISO_DIALOG_2",
-                "TISO_DIALOG_2",
-                "TISO_DIALOG_3",
-                "TISO_DIALOG_3",
-                "TISO_DIALOG_3",
-                "TISO_DIALOG_4",
-                "TISO_DIALOG_4",
-                "TISO_DIALOG_4",
+                "TISO_DIALOG_1", "TISO_DIALOG_1", "TISO_DIALOG_1",
+                "TISO_DIALOG_2", "TISO_DIALOG_2", "TISO_DIALOG_2",
+                "TISO_DIALOG_3", "TISO_DIALOG_3", "TISO_DIALOG_3",
+                "TISO_DIALOG_4", "TISO_DIALOG_4", "TISO_DIALOG_4",
                 "TISO_DIALOG_5",
             };
             _dnReaction.SetConvoTitle(dnDialogue[_rand.Next(dnDialogue.Length)]);
@@ -174,18 +167,10 @@ namespace Tiso
             {
                 string[] dnDialogue =
                 {
-                    "TISO_DIALOG_1",
-                    "TISO_DIALOG_1",
-                    "TISO_DIALOG_1",
-                    "TISO_DIALOG_2",
-                    "TISO_DIALOG_2",
-                    "TISO_DIALOG_2",
-                    "TISO_DIALOG_3",
-                    "TISO_DIALOG_3",
-                    "TISO_DIALOG_3",
-                    "TISO_DIALOG_4",
-                    "TISO_DIALOG_4",
-                    "TISO_DIALOG_4",
+                    "TISO_DIALOG_1", "TISO_DIALOG_1", "TISO_DIALOG_1",
+                    "TISO_DIALOG_2", "TISO_DIALOG_2", "TISO_DIALOG_2",
+                    "TISO_DIALOG_3", "TISO_DIALOG_3", "TISO_DIALOG_3",
+                    "TISO_DIALOG_4", "TISO_DIALOG_4", "TISO_DIALOG_4",
                     "TISO_DIALOG_5",
                 };
 

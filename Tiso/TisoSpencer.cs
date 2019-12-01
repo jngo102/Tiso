@@ -157,9 +157,9 @@ namespace Tiso
                 case "TISO_DIALOG_1_1":
                     return "I, Tiso, will be victorious!";
                 case "TISO_DIALOG_2_1":
-                    return "The thrill of a real battle, what a joy!";
+                    return "I seek the thrill of a true battle, not this pitiful skirmish!";
                 case "TISO_DIALOG_3_1":
-                    return "Such exhilaration from the tension of a fight!";
+                    return "This tiny squib stands no chance against me!";
                 case "TISO_DIALOG_4_1":
                     return "Once I defeat this weakling, the Colosseum awaits!";
                 case "TISO_DIALOG_5_1":

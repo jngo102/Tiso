@@ -198,8 +198,7 @@ namespace Tiso
             {
                 Log("Dash Antic");
                 _anim.PlayAnimation("Dash Antic");
-                _recoil.SetRecoilSpeed(0.0f);
-                
+
                 yield return new WaitForSeconds(_anim.GetAnimDuration("Dash Antic"));
 
                 StartCoroutine(Dashing(0.25f));
@@ -211,6 +210,7 @@ namespace Tiso
                 _anim.PlayAnimation("Dashing", true);
                 _audio.PlayAudioClip("Dash");
                 _rb.velocity = new Vector2(DashVelocity * _direction, 0);
+                _recoil.SetRecoilSpeed(0.0f);
 
                 GameObject gDashEFfect = Instantiate(TisoSpencer.PreloadedGameObjects["G Dash"], transform.position + Vector3.right * -4.0f * _direction, Quaternion.identity);
                 gDashEFfect.SetActive(true);
@@ -290,17 +290,37 @@ namespace Tiso
                 
                 StartCoroutine(Jumping());
             }
-
+            
             IEnumerator Jumping()
             {
                 Log("Jumping");
+                bool willDive = false;
+                bool isDiving = false;
+                float diveWeight = _rand.Next(0, 100);
+                if (diveWeight <= 50)
+                {
+                    willDive = true;
+                }
                 while (transform.position.y > GroundY && !IsGrounded() || _rb.velocity.y >= 0)
                 {
+                    float heroX = HeroController.instance.transform.position.x;
+                    float tisoX = transform.position.x;
+                    float distX = heroX - tisoX;
+                    if (Mathf.Abs(distX) < 0.5f)
+                    {
+                        if (willDive)
+                        {
+                            isDiving = true;
+                            TisoDive();
+                            break;
+                        }
+                    }
+                    
                     yield return null;
                 }
-                StartCoroutine(Land());
+                
+                if (!isDiving) StartCoroutine(Land());
             }
-
             IEnumerator Land()
             {
                 Log("Land");
@@ -337,8 +357,7 @@ namespace Tiso
             {
                 Log("Slash Antic");
                 _anim.PlayAnimation("Slash Antic");
-                _recoil.SetRecoilSpeed(0.0f);
-                
+
                 yield return new WaitForSeconds(_anim.GetAnimDuration("Slash Antic"));
 
                 StartCoroutine(Slash1());
@@ -351,6 +370,7 @@ namespace Tiso
                 _anim.PlayAnimation("Slash 1");
                 _audio.PlayAudioClip("Slash");
                 _rb.velocity = Vector2.right * _direction * SlashVelocity;
+                _recoil.SetRecoilSpeed(0.0f);
                 slash1 = Instantiate(TisoSpencer.PreloadedGameObjects["Slash"], transform.position + Vector3.right * _direction * 1.0f, Quaternion.identity);
                 slash1.SetActive(true);
                 slash1.layer = 22;
@@ -627,7 +647,6 @@ namespace Tiso
             
             IEnumerator UpslashRecover()
             {
-                _recoil.SetRecoilSpeed(15);
                 transform.position += Vector3.down * 2.5f;
                 
                 yield return null;
@@ -664,6 +683,45 @@ namespace Tiso
             StartCoroutine(BombThrowAntic());
         }
 
+        private void TisoDive()
+        {
+            IEnumerator DiveAntic()
+            {
+                _anim.PlayAnimation("Dive Antic");
+                _rb.velocity = Vector2.zero;
+                
+                yield return new WaitForSeconds(_anim.GetAnimDuration("Dive Antic"));
+
+                StartCoroutine(Dive());
+            }
+
+            IEnumerator Dive()
+            {
+                _anim.PlayAnimation("Diving", true);
+
+                _rb.velocity = Vector2.down * DiveVelocity;
+                
+                while (!IsGrounded())
+                {
+                    yield return null;
+                }
+
+                StartCoroutine(DiveLand());
+            }
+
+            IEnumerator DiveLand()
+            {
+                _anim.PlayAnimation("Dive Land");
+                _rb.velocity = Vector2.zero;
+
+                yield return new WaitForSeconds(_anim.GetAnimDuration("Dive Land"));
+
+                StartIdle();
+            }
+
+            StartCoroutine(DiveAntic());
+        }
+        
         private void TisoDab()
         {
             IEnumerator DabAntic()
