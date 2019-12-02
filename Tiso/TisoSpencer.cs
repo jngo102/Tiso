@@ -40,6 +40,8 @@ namespace Tiso
                 ("GG_Hive_Knight", "Battle Scene/Hive Knight/Slash 1"),
                 ("GG_Hive_Knight", "Battle Scene/Hive Knight/Pt Jump"),
                 ("GG_Hive_Knight", "Battle Scene/Globs/Hive Knight Glob"),
+                ("GG_Lost_Kin", "Lost Kin"),
+                ("GG_Soul_Tyrant", "Dream Mage Lord"),
             };
         }
 
@@ -50,6 +52,8 @@ namespace Tiso
             PreloadedGameObjects.Add("G Dash", preloadedObjects["GG_Hornet_2"]["Boss Holder/Hornet Boss 2/G Dash Effect"]);
             PreloadedGameObjects.Add("Glob", preloadedObjects["GG_Hive_Knight"]["Battle Scene/Globs/Hive Knight Glob"]);
             PreloadedGameObjects.Add("Hornet", preloadedObjects["GG_Hornet_2"]["Boss Holder/Hornet Boss 2"]);
+            PreloadedGameObjects.Add("Kin", preloadedObjects["GG_Lost_Kin"]["Lost Kin"]);
+            PreloadedGameObjects.Add("Mage", preloadedObjects["GG_Soul_Tyrant"]["Dream Mage Lord"]);
             PreloadedGameObjects.Add("Ooma Corpse", preloadedObjects["Fungus3_02"]["Jellyfish/Corpse Jellyfish(Clone)"]);
             PreloadedGameObjects.Add("Laser", preloadedObjects["GG_Crystal_Guardian_2"]["Laser Turret Mega"]);
             PreloadedGameObjects.Add("Pt Jump", preloadedObjects["GG_Hive_Knight"]["Battle Scene/Hive Knight/Pt Jump"]);

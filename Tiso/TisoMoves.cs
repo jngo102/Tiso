@@ -16,7 +16,7 @@ namespace Tiso
         private const float DashVelocity = 30.0f;
         private const float DiveVelocity = 50.0f;
         private const float EvadeVelocity = 40.0f;
-        private const float Extension = 1.0f;
+        private const float Extension = 0.1f;
         private const float Gravity = 90f;
         private const float GroundY = 5.0f;
         private const float JumpVelocity = 40f;
@@ -38,6 +38,8 @@ namespace Tiso
 
         private GameObject _bee;
         private GameObject _hornet;
+        private GameObject _kin;
+        private PlayMakerFSM _mageLord;
 
         private void Awake()
         {
@@ -58,6 +60,8 @@ namespace Tiso
 
             _bee = TisoSpencer.PreloadedGameObjects["Bee"];
             _hornet = TisoSpencer.PreloadedGameObjects["Hornet"];
+            _kin = TisoSpencer.PreloadedGameObjects["Kin"];
+            _mageLord = TisoSpencer.PreloadedGameObjects["Mage"].LocateMyFSM("Mage Lord");
         }
 
         private void OnTriggeredPhase2()
@@ -113,7 +117,7 @@ namespace Tiso
 
         private void FixedUpdate()
         {
-            if (!IsGrounded())
+            if (!IsGrounded() && !_isDiving)
             {
                 _rb.velocity += Vector2.down * Gravity * Time.deltaTime;
             }
@@ -258,6 +262,7 @@ namespace Tiso
             StartCoroutine(DashAntic());
         }
 
+        private bool _isDiving;
         public void TisoJump()
         {
             IEnumerator JumpAntic()
@@ -295,7 +300,7 @@ namespace Tiso
             {
                 Log("Jumping");
                 bool willDive = false;
-                bool isDiving = false;
+                _isDiving = false;
                 float diveWeight = _rand.Next(0, 100);
                 if (diveWeight <= 50)
                 {
@@ -310,7 +315,7 @@ namespace Tiso
                     {
                         if (willDive)
                         {
-                            isDiving = true;
+                            _isDiving = true;
                             TisoDive();
                             break;
                         }
@@ -319,7 +324,7 @@ namespace Tiso
                     yield return null;
                 }
                 
-                if (!isDiving) StartCoroutine(Land());
+                if (!_isDiving) StartCoroutine(Land());
             }
             IEnumerator Land()
             {
@@ -692,13 +697,14 @@ namespace Tiso
                 
                 yield return new WaitForSeconds(_anim.GetAnimDuration("Dive Antic"));
 
-                StartCoroutine(Dive());
+                StartCoroutine(Diving());
             }
 
-            IEnumerator Dive()
+            IEnumerator Diving()
             {
                 _anim.PlayAnimation("Diving", true);
-
+                _audio.PlayAudioClip("Diving", 0.25f);
+                
                 _rb.velocity = Vector2.down * DiveVelocity;
                 
                 while (!IsGrounded())
@@ -712,8 +718,12 @@ namespace Tiso
             IEnumerator DiveLand()
             {
                 _anim.PlayAnimation("Dive Land");
+                _audio.PlayAudioClip("Dive Land", 0.25f);
                 _rb.velocity = Vector2.zero;
-
+                Log("Calling SpawnShockwaves");
+                SpawnShockwaves(1.0f, 50f, 1);
+                GameCameras.instance.cameraShakeFSM.SendEvent("SmallShake");
+            
                 yield return new WaitForSeconds(_anim.GetAnimDuration("Dive Land"));
 
                 StartIdle();
@@ -742,6 +752,28 @@ namespace Tiso
             }
 
             StartCoroutine(DabAntic());
+        }
+
+        private void SpawnShockwaves(float vertScale, float speed, int damage)
+        {
+            bool[] facingRightBools = {false, true};
+            Vector2 pos = transform.position;
+            foreach (bool facingRight in facingRightBools)
+            {
+                Log("Instantiating Shockwave");
+                GameObject shockwave =
+                    Instantiate(_mageLord.GetAction<SpawnObjectFromGlobalPool>("Quake Waves").gameObject.Value);
+                Log("Getting shockwave FSM");
+                PlayMakerFSM shockFSM = shockwave.LocateMyFSM("shockwave");
+                shockFSM.FsmVariables.FindFsmBool("Facing Right").Value = facingRight;
+                shockFSM.FsmVariables.FindFsmFloat("Speed").Value = speed;
+                shockwave.AddComponent<DamageHero>().damageDealt = damage;
+                Log("Setting shockwave active");
+                shockwave.SetActive(true);
+                shockwave.transform.SetPosition2D(new Vector2(pos.x + (facingRight ? 1.5f : -1.5f), 3.0f));
+                shockwave.transform.SetScaleY(vertScale);
+            }
+
         }
         
        private bool IsGrounded()

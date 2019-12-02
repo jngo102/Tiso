@@ -69,6 +69,19 @@ namespace Tiso
             alt.name = "StatueAlt";
             bs.statueDisplayAlt = alt;
 
+            var completion = new BossStatue.Completion
+            {
+                completedTier1 = true,
+                seenTier3Unlock = true,
+                completedTier2 = true,
+                completedTier3 = true,
+                isUnlocked = true,
+                hasBeenSeen = true,
+                usingAltVersion = true,
+            };
+            bs.StatueState = completion;
+            bs.DreamStatueState = completion;
+
             BossStatue.BossUIDetails details = new BossStatue.BossUIDetails();
             details.nameKey = details.nameSheet = "TISO_NAME";
             details.descriptionKey = details.descriptionSheet = "TISO_DESC";
